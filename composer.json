@@ -1,0 +1,21 @@
+{
+    "name": "php-health/cda",
+    "description": "a package to create cda files",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Julien Fastré",
+            "email": "julien.fastre@champs-libres.coop"
+        }
+    ],
+    "autoload" : {
+	"psr-4": {
+            "PHPHealth\\CDA\\": "lib/"
+	}
+    },
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^5.6"
+    }
+}
