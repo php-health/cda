@@ -26,6 +26,8 @@
 
 namespace PHPHealth\CDA\DataType\TextAndMultimedia;
 
+use PHPHealth\CDA\ClinicalDocument as CD;
+
 /**
  * Data that is primarily intended for human interpretation or for further 
  * machine processing outside the scope of HL7. This includes unformatted or 
@@ -143,7 +145,18 @@ class EncapsuledData extends BinaryData
         return $this;
     }
 
-
+    public function setValueToElement(\DOMElement &$el)
+    {
+        $el->setAttribute(CD::NS_CDA.'mediaType', $this->getMediaType());
     
+        if ($this->getMediaType() == 'text/plain') {
+            $content = new \DOMCdataSection($this->getContent());
+        } else {
+            $content = new \DOMText($this->getContent());
+        }
+        
+        $el->appendChild($content);
+        
+    }
     
 }

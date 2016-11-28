@@ -31,7 +31,15 @@ namespace PHPHealth\CDA\DataType;
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class AnyType
+abstract class AnyType
 {
-    
+   /**
+    * 
+    * Add attribute to the given element.
+    *
+    * The data type are responsible to add the given attribute, content child
+    * to the Element. 
+    *
+    */ 
+    abstract public function setValueToElement(\DOMElement &$el);
 }

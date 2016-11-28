@@ -61,15 +61,9 @@ class NonXMLBodyComponent extends AbstractComponent
     {
         $component = $doc->createElement(CD::NS_CDA.'nonXMLBody');
         $text = $doc->createElement(CD::NS_CDA.'text');
-        $text->setAttribute(CD::NS_CDA.'mediaType', $this->content->getMediaType());
         
-        if ($this->content->getMediaType() == 'text/plain') {
-            $content = new \DOMCdataSection($this->content->getContent());
-        } else {
-            $content = new \DOMText($this->content->getContent());
-        }
+        $this->content->setValueToElement($text);
 
-        $text->appendChild($content);
         $component->appendChild($text);
         
         return $component;

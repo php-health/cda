@@ -123,7 +123,7 @@ CDA;
         $expectedClinicalElement = $expectedDoc
                 ->getElementsByTagName('ClinicalDocument')
                 ->item(0);
-        
+        fwrite(STDOUT, $doc->toDOMDocument()->saveXML());
         // tests
         $this->assertEquals(1, $clinicalElements->length, 
                 "test that there is only one clinical document");

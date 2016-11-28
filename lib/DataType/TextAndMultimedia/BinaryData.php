@@ -64,4 +64,9 @@ class BinaryData extends \PHPHealth\CDA\DataType\AnyType
         return $this;
     }
     
+    public function setValueToElement(\DOMElement &$el)
+    {
+        $content = new \DOMText($this->getContent());
+        $el->appendChild($content);
+    }
 }
