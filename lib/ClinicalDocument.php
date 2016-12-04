@@ -26,6 +26,9 @@
 
 namespace PHPHealth\CDA;
 
+use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
+use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
+
 /**
  * Root class for clinical document
  *
@@ -57,6 +60,18 @@ class ClinicalDocument
     
     private $rootComponent;
     
+    /**
+     *
+     * @var TimeStamp
+     */
+    private $effectiveTime;
+    
+    /**
+     *
+     * @var InstanceIdentifier
+     */
+    private $id;
+    
     public function __construct()
     {
         $this->rootComponent = new Component\RootBodyComponent();
@@ -85,6 +100,57 @@ class ClinicalDocument
     
     /**
      * 
+     * @return TimeStamp
+     */
+    public function getEffectiveTime()
+    {
+        return $this->effectiveTime;
+    }
+
+    /**
+     * 
+     * @param \DateTime|TimeStamp $effectiveTime
+     * @return $this
+     */
+    public function setEffectiveTime($effectiveTime)
+    {
+        if ($effectiveTime instanceof \DateTime) {
+            $this->effectiveTime = new TimeStamp($effectiveTime); 
+        } elseif ($effectiveTime instanceof TimeStamp) {
+            $this->effectiveTime = $effectiveTime;
+        } else {
+            throw new \InvalidArgumentException(sprintf("the effective time should be "
+                . "a %s or %s.", \DateTime::class, TimeStamp::class));
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return InstanceIdentifier
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * 
+     * @param InstanceIdentifier $id
+     * @return $this
+     */
+    public function setId(InstanceIdentifier $id)
+    {
+        $this->id = $id;
+        
+        return $this;
+    }
+
+    
+        
+    /**
+     * 
      * @return Component\RootBodyComponent;
      */
     public function getRootComponent()
@@ -108,6 +174,18 @@ class ClinicalDocument
         $doc->setAttribute('templateId', $this->templateId);
         // add title
         $doc->appendchild($dom->createElement('title', $this->title));
+        //add effective time
+        if ($this->getEffectiveTime() !== null) {
+            $et = $dom->createElement('effectiveTime');
+            $this->effectiveTime->setValueToElement($et);
+            $doc->appendChild($et);
+        }
+        // add id
+        if ($this->getId() !== null) {
+            $id = $dom->createElement('id');
+            $this->id->setValueToElement($id);
+            $doc->appendChild($id);
+        }
         // add components
         if (!$this->getRootComponent()->isEmpty()) {
             $doc->appendChild($this->getRootComponent()->toDOMElement($dom));

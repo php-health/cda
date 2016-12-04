@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PHPHealth\CDA\ClinicalDocument;
 use PHPHealth\CDA\Component\NonXMLBodyComponent;
 use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
+use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
 
 /**
  * 
@@ -50,7 +51,7 @@ class ClinicalDocumentTest extends TestCase
         $this->assertInstanceOf(\DOMDocument::class, $dom);
     }
     
-    public function testSimpleDocument()
+    public function testSimplifiedDocument()
     {
         // create the initial document
         $doc = new ClinicalDocument();
@@ -80,10 +81,6 @@ CDA;
         $this->assertEqualXMLStructure(
                 $expectedClinicalElement, $clinicalElement, true,
                 "test the document is equal to expected");
-        
-        
-        
-        
     }
     
     public function testDocumentWithNonXMLBody()
@@ -91,6 +88,9 @@ CDA;
         // create the initial document
         $doc = new ClinicalDocument();
         $doc->setTitle("Good Health Clinic Consultation Note");
+        $doc->setEffectiveTime(\DateTime::createFromFormat(\DateTime::ISO8601, 
+            "2014-08-27T01:43:12+0200"));
+        $doc->setId(new InstanceIdentifier("1.2.3.4", "https://mass.chill.pro"));
         
         $nonXMLBody = new NonXMLBodyComponent();
         $string = new CharacterString();
@@ -109,6 +109,8 @@ CDA;
 <?xml version="1.0" encoding="UTF-8"?>
 <ClinicalDocument xmlns="urn:hl7-org:v3" templateId="2.16.840.1.113883.3.27.1776">
 	<title>Good Health Clinic Consultation Note</title>
+    <effectiveTime value="201408270143"/>
+    <id root="1.2.3.4" extension="https://mass.chill.pro" />
         <component>
             <nonXMLBody>
                 <text mediaType="text/plain"><![CDATA[
@@ -130,10 +132,6 @@ CDA;
         $this->assertEqualXMLStructure(
                 $expectedClinicalElement, $clinicalElement, true,
                 "test the document is equal to expected");
-        
-        
-        
-        
     }
     
 }
