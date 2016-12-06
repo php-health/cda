@@ -42,14 +42,14 @@ class ClinicalDocument
      * the templateId of the document. Will be inserted into doc, like
      * 
      * ```
-     * <ClinicalDocument templateId="2.16.840.1.113883.3.27.1776">
+     * <typeId>
      * ```
      * 
      * TODO : always equals to '2.16.840.1.113883.3.27.1776'
      *
-     * @var string
+     * @var DataType\Identifier\InstanceIdentifier
      */
-    private $templateId = '2.16.840.1.113883.3.27.1776';
+    private $typeId;
     
     /**
      * the title of the document
@@ -75,6 +75,8 @@ class ClinicalDocument
     public function __construct()
     {
         $this->rootComponent = new Component\RootBodyComponent();
+        
+        $this->typeId = new InstanceIdentifier("2.16.840.1.113883.1.3", "POCD_HD000040");
     }
     
     /**
@@ -166,12 +168,21 @@ class ClinicalDocument
     {
         $dom = new \DOMDocument('1.0', 'UTF-8');
         
-        $doc = $dom->createElement('ClinicalDocument');
+        $doc = $dom->createElementNS('urn:hl7-org:v3', 'ClinicalDocument');
         $dom->appendChild($doc);
-        // set the default NS
-        $dom->createAttributeNS('urn:hl7-org:v3','xmlns');
-        // add templateId
-        $doc->setAttribute('templateId', $this->templateId);
+        // set the NS
+        $doc->setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 
+            'xsi:schemaLocation','urn:hl7-org:v3 CDA.xsd');
+        // add typeId
+        $typeId = $dom->createElement(self::NS_CDA.'typeId');
+        $this->typeId->setValueToElement($typeId);
+        $doc->appendChild($typeId);
+        // add id
+        if ($this->getId() !== null) {
+            $id = $dom->createElement('id');
+            $this->id->setValueToElement($id);
+            $doc->appendChild($id);
+        }
         // add title
         $doc->appendchild($dom->createElement('title', $this->title));
         //add effective time
@@ -179,12 +190,6 @@ class ClinicalDocument
             $et = $dom->createElement('effectiveTime');
             $this->effectiveTime->setValueToElement($et);
             $doc->appendChild($et);
-        }
-        // add id
-        if ($this->getId() !== null) {
-            $id = $dom->createElement('id');
-            $this->id->setValueToElement($id);
-            $doc->appendChild($id);
         }
         // add components
         if (!$this->getRootComponent()->isEmpty()) {

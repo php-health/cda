@@ -65,7 +65,8 @@ class ClinicalDocumentTest extends TestCase
         // create the expected document from XML string
         $expected = <<<'CDA'
 <?xml version="1.0" encoding="UTF-8"?>
-<ClinicalDocument xmlns="urn:hl7-org:v3" templateId="2.16.840.1.113883.3.27.1776">
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 CDA.xsd">
+    <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
 	<title>Good Health Clinic Consultation Note</title>
 </ClinicalDocument>
 CDA;
@@ -107,17 +108,18 @@ CDA;
         // create the expected document from XML string
         $expected = <<<'CDA'
 <?xml version="1.0" encoding="UTF-8"?>
-<ClinicalDocument xmlns="urn:hl7-org:v3" templateId="2.16.840.1.113883.3.27.1776">
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 CDA.xsd">
+    <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+    <id root="1.2.3.4" extension="https://mass.chill.pro" />
 	<title>Good Health Clinic Consultation Note</title>
     <effectiveTime value="201408270143"/>
-    <id root="1.2.3.4" extension="https://mass.chill.pro" />
-        <component>
-            <nonXMLBody>
-                <text mediaType="text/plain"><![CDATA[
+    <component>
+        <nonXMLBody>
+            <text mediaType="text/plain"><![CDATA[
 This is a narrative text
 ]]></text>
-            </nonXMLBody>
-        </component>
+        </nonXMLBody>
+    </component>
 </ClinicalDocument>
 CDA;
         $expectedDoc = new \DOMDocument('1.0');
@@ -125,7 +127,10 @@ CDA;
         $expectedClinicalElement = $expectedDoc
                 ->getElementsByTagName('ClinicalDocument')
                 ->item(0);
-        fwrite(STDOUT, $doc->toDOMDocument()->saveXML());
+        
+        // save the doc for a further reading
+        $doc->toDOMDocument()->save(sys_get_temp_dir().'/'.__METHOD__.'.xml');
+            ;
         // tests
         $this->assertEquals(1, $clinicalElements->length, 
                 "test that there is only one clinical document");
