@@ -26,6 +26,8 @@
 
 namespace PHPHealth\CDA\DataType\Code;
 
+use PHPHealth\CDA\ClinicalDocument as CDA;
+
 /**
  * A CD represents any kind of concept usually by giving a code defined in a 
  * code system. A CD can contain the original text or phrase that served as the 
@@ -75,20 +77,40 @@ class ConceptDescriptor extends \PHPHealth\CDA\DataType\AnyType
     {
         return $this->codeSystem;
     }
+    
+    public function hasCodeSystem()
+    {
+        return $this->getCodeSystem() !== null;
+    }
 
     public function getCodeSystemName()
     {
         return $this->codeSystemName;
+    }
+    
+    public function hasCodeSystemName()
+    {
+        return $this->getCodeSystemName() !== null;
     }
 
     public function getDisplayName()
     {
         return $this->displayName;
     }
+    
+    public function hasDisplayName()
+    {
+        return $this->getDisplayName() !== null;
+    }
 
     public function getOriginalText()
     {
         return $this->originalText;
+    }
+    
+    public function hasOriginalText()
+    {
+        return $this->getOriginalText() !== null;
     }
 
     public function setCodeSystem($codeSystem)
@@ -114,5 +136,21 @@ class ConceptDescriptor extends \PHPHealth\CDA\DataType\AnyType
         $this->originalText = $originalText;
         return $this;
     }
-    
+
+    public function setValueToElement(\DOMElement &$el)
+    {
+        $el->setAttribute(CDA::NS_CDA."code", $this->getCode());
+        
+        if ($this->hasDisplayName()) {
+            $el->setAttribute("displayName", $this->getDisplayName());
+        }
+        
+        if ($this->hasCodeSystem()) {
+            $el->setAttribute("codeSystem", $this->getCodeSystem());
+        }
+        
+        if ($this->hasCodeSystemName()) {
+            $el->setAttribute("codeSystemName", $this->getCodeSystemName());
+        }
+    }
 }

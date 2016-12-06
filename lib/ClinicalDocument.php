@@ -28,6 +28,8 @@ namespace PHPHealth\CDA;
 
 use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
 use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
+use PHPHealth\CDA\DataType\Code\CodedValue;
+use PHPHealth\CDA\Elements\Code;
 
 /**
  * Root class for clinical document
@@ -71,6 +73,18 @@ class ClinicalDocument
      * @var InstanceIdentifier
      */
     private $id;
+    
+    /**
+     *
+     * @var CodedValue 
+     */
+    private $code;
+    
+    /**
+     *
+     * @var CodedValue
+     */
+    private $confidentialityCode;
     
     public function __construct()
     {
@@ -149,7 +163,30 @@ class ClinicalDocument
         return $this;
     }
 
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    public function setCode(CodedValue $code)
+    {
+        $this->code = $code;
+        
+        return $this;
+    }
     
+    public function getConfidentialityCode()
+    {
+        return $this->confidentialityCode;
+    }
+
+    public function setConfidentialityCode(CodedValue $confidentialityCode)
+    {
+        $this->confidentialityCode = $confidentialityCode;
+        
+        return $this;
+    }
+
         
     /**
      * 
@@ -183,14 +220,29 @@ class ClinicalDocument
             $this->id->setValueToElement($id);
             $doc->appendChild($id);
         }
-        // add title
-        $doc->appendchild($dom->createElement('title', $this->title));
+        // add code
+        if ($this->getCode() !== null) {
+            $code = (new Code())->setCodedValue($this->getCode());
+            $doc->appendChild($code->toDOMElement($dom));
+        }
+        
+        
         //add effective time
         if ($this->getEffectiveTime() !== null) {
             $et = $dom->createElement('effectiveTime');
             $this->effectiveTime->setValueToElement($et);
             $doc->appendChild($et);
         }
+        
+        // add title
+        $doc->appendchild($dom->createElement('title', $this->title));
+        
+        // add cofidentialityCode
+        if ($this->getConfidentialityCode() !== null) {
+            $confidentialityCode = (new Elements\ConfidentialityCode())->setCodedValue($this->getConfidentialityCode());
+            $doc->appendChild($confidentialityCode->toDOMElement($dom));
+        }
+
         // add components
         if (!$this->getRootComponent()->isEmpty()) {
             $doc->appendChild($this->getRootComponent()->toDOMElement($dom));
