@@ -1,8 +1,9 @@
 <?php
+
 /*
  * The MIT License
  *
- * Copyright 2016 julien.
+ * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,48 +23,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 namespace PHPHealth\CDA\Elements;
 
-use PHPHealth\CDA\DataType\Code\CodedValue;
+use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
- * Description of Code
+ * 
  *
- * @author julien
+ * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Code extends AbstractElement
+abstract class AbstractElement implements \PHPHealth\CDA\ElementInterface
 {
     /**
-     *
-     * @var CodedValue 
+     * get the element tag name
+     * 
+     * @return string
      */
-    protected $codedValue;
+    abstract protected function getElementTag();
     
-    public function __construct(CodedValue $codedValue)
+    /**
+     * create an element with the tag given by self::getElementTag and
+     * apply this element to datatype given by $properties
+     * 
+     * @param \DOMDocument $doc
+     * @param string[] $properties the name of the properties to apply on element
+     * @return \DOMElement
+     */
+    protected function createElement(\DOMDocument $doc, array $properties = array())
     {
-        $this->setCodedValue($codedValue);
+        /* @var $el DOMElement */
+        $el = $doc->createElement(CDA::NS_CDA.$this->getElementTag());
+        
+        if (count($properties) > 0) {
+            foreach($properties as $property) {
+                $this->{$property}->setValueToElement($el);
+            }
+        }
+        
+        return $el;
     }
     
-    public function toDOMElement(\DOMDocument $doc)
-    {
-        return $this->createElement($doc, array ('codedValue'));
-    }
-    
-    public function getCodedValue()
-    {
-        return $this->codedValue;
-    }
-
-    public function setCodedValue(CodedValue $codedValue)
-    {
-        $this->codedValue = $codedValue;
-        return $this;
-    }
-    
-    public function getElementTag()
-    {
-        return "code";
-    }
-
-
 }

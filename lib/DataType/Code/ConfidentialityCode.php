@@ -22,48 +22,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-namespace PHPHealth\CDA\Elements;
+namespace PHPHealth\CDA\DataType\Code;
 
 use PHPHealth\CDA\DataType\Code\CodedValue;
 
 /**
- * Description of Code
+ * 
  *
  * @author julien
  */
-class Code extends AbstractElement
+class ConfidentialityCode
 {
-    /**
-     *
-     * @var CodedValue 
-     */
-    protected $codedValue;
+    // 	<confidentialityCode code="R" displayName="Restricted" codeSystem="2.16.840.1.113883.5.25" codeSystemName="Confidentiality"/>
     
-    public function __construct(CodedValue $codedValue)
-    {
-        $this->setCodedValue($codedValue);
-    }
+    const CODE_SYSTEM = "2.16.840.1.113883.5.25";
+    const CODE_SYSTEM_NAME = "Confidentiality";
     
-    public function toDOMElement(\DOMDocument $doc)
-    {
-        return $this->createElement($doc, array ('codedValue'));
-    }
+    const RESTRICTED = "Restricted";
+    const RESTRICTED_KEY = "R";
+    const NORMAL = "Normal";
+    const NORMAL_KEY = "N";
+    const VERY_RESTRICTED = "Very Restricted";
+    const VERY_RESTRICTED_KEY = "V";
     
-    public function getCodedValue()
+    public static function create($key, $displayName)
     {
-        return $this->codedValue;
-    }
-
-    public function setCodedValue(CodedValue $codedValue)
-    {
-        $this->codedValue = $codedValue;
-        return $this;
+        $codedValue = new CodedValue();
+        
+        return $codedValue->setCode($key)
+            ->setDisplayName($displayName)
+            ->setCodeSystem(self::CODE_SYSTEM)
+            ->setCodeSystemName(self::CODE_SYSTEM_NAME);
     }
     
-    public function getElementTag()
-    {
-        return "code";
-    }
-
-
 }

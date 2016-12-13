@@ -31,8 +31,14 @@ use PHPHealth\CDA\ClinicalDocument;
 use PHPHealth\CDA\Component\NonXMLBodyComponent;
 use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
 use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
-use PHPHealth\CDA\Elements\LoincCode;
+use PHPHealth\CDA\DataType\Code\LoincCode;
 use PHPHealth\CDA\Elements\ConfidentialityCode;
+use PHPHealth\CDA\DataType\Code\ConfidentialityCode as ConfidentialityCodeType;
+use PHPHealth\CDA\Elements\Title;
+use PHPHealth\CDA\Elements\EffectiveTime;
+use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
+use PHPHealth\CDA\Elements\Id;
+use PHPHealth\CDA\Elements\Code;
 
 /**
  * 
@@ -52,12 +58,14 @@ class ClinicalDocumentTest extends TestCase
         
         $this->assertInstanceOf(\DOMDocument::class, $dom);
     }
-    
+   
     public function testSimplifiedDocument()
     {
         // create the initial document
         $doc = new ClinicalDocument();
-        $doc->setTitle("Good Health Clinic Consultation Note");
+        $doc->setTitle(
+                new Title(new CharacterString("Good Health Clinic Consultation Note"))
+                );
         
         $clinicalElements = $doc->toDOMDocument()
                 ->getElementsByTagName('ClinicalDocument');
@@ -90,12 +98,13 @@ CDA;
     {
         // create the initial document
         $doc = new ClinicalDocument();
-        $doc->setTitle("Good Health Clinic Consultation Note");
-        $doc->setEffectiveTime(\DateTime::createFromFormat(\DateTime::ISO8601, 
-            "2014-08-27T01:43:12+0200"));
-        $doc->setId(new InstanceIdentifier("1.2.3.4", "https://mass.chill.pro"));
-        $doc->setCode(LoincCode::createCodedValue('42349-1', 'REASON FOR REFERRAL'));
-        $doc->setConfidentialityCode(ConfidentialityCode::createCode(ConfidentialityCode::RESTRICTED_KEY, ConfidentialityCode::RESTRICTED));
+        $doc->setTitle(new Title(new CharacterString("Good Health Clinic Consultation Note")));
+        $doc->setEffectiveTime(new EffectiveTime(
+                new TimeStamp(\DateTime::createFromFormat(\DateTime::ISO8601, 
+                        "2014-08-27T01:43:12+0200"))));
+        $doc->setId(new Id(new InstanceIdentifier("1.2.3.4", "https://mass.chill.pro")));
+        $doc->setCode(new Code(LoincCode::create('42349-1', 'REASON FOR REFERRAL')));
+        $doc->setConfidentialityCode(new ConfidentialityCode(ConfidentialityCodeType::create(ConfidentialityCodeType::RESTRICTED_KEY, ConfidentialityCodeType::RESTRICTED)));
         
         $nonXMLBody = new NonXMLBodyComponent();
         $string = new CharacterString();
@@ -145,5 +154,4 @@ CDA;
                 $expectedClinicalElement, $clinicalElement, true,
                 "test the document is equal to expected");
     }
-    
 }

@@ -1,8 +1,9 @@
 <?php
+
 /*
  * The MIT License
  *
- * Copyright 2016 julien.
+ * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,48 +23,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 namespace PHPHealth\CDA\Elements;
 
-use PHPHealth\CDA\DataType\Code\CodedValue;
+use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
 
 /**
- * Description of Code
+ * 
  *
- * @author julien
+ * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Code extends AbstractElement
+class EffectiveTime extends AbstractElement
 {
     /**
      *
-     * @var CodedValue 
+     * @var TimeStamp
      */
-    protected $codedValue;
+    protected $timestamp;
     
-    public function __construct(CodedValue $codedValue)
+    public function __construct(TimeStamp $timestamp) 
     {
-        $this->setCodedValue($codedValue);
+        $this->setTimestamp($timestamp);
     }
     
-    public function toDOMElement(\DOMDocument $doc)
-    {
-        return $this->createElement($doc, array ('codedValue'));
-    }
     
-    public function getCodedValue()
+    public function getTimestamp()
     {
-        return $this->codedValue;
+        return $this->timestamp;
     }
 
-    public function setCodedValue(CodedValue $codedValue)
+    public function setTimestamp(TimeStamp $timestamp)
     {
-        $this->codedValue = $codedValue;
+        $this->timestamp = $timestamp;
+        
         return $this;
     }
-    
-    public function getElementTag()
+
+    public function toDOMElement(\DOMDocument $doc)
     {
-        return "code";
+        return $this->createElement($doc, array('timestamp'));
     }
 
+    protected function getElementTag()
+    {
+        return 'effectiveTime';
+    }
 
 }

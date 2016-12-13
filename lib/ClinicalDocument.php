@@ -30,6 +30,11 @@ use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
 use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
 use PHPHealth\CDA\DataType\Code\CodedValue;
 use PHPHealth\CDA\Elements\Code;
+use PHPHealth\CDA\Elements\Title;
+use PHPHealth\CDA\Elements\EffectiveTime;
+use PHPHealth\CDA\Elements\Id;
+use PHPHealth\CDA\Elements\ConfidentialityCode;
+use PHPHealth\CDA\Elements\TypeId;
 
 /**
  * Root class for clinical document
@@ -49,40 +54,45 @@ class ClinicalDocument
      * 
      * TODO : always equals to '2.16.840.1.113883.3.27.1776'
      *
-     * @var DataType\Identifier\InstanceIdentifier
+     * @var TypeId
      */
     private $typeId;
     
     /**
      * the title of the document
      *
-     * @var string
+     * @var Title
      */
     private $title;
     
+    /**
+     * the root component
+     *
+     * @var Component\RootBodyComponent 
+     */
     private $rootComponent;
     
     /**
      *
-     * @var TimeStamp
+     * @var EffectiveTime
      */
     private $effectiveTime;
     
     /**
      *
-     * @var InstanceIdentifier
+     * @var Id
      */
     private $id;
     
     /**
      *
-     * @var CodedValue 
+     * @var Code 
      */
     private $code;
     
     /**
      *
-     * @var CodedValue
+     * @var ConfidentialityCode
      */
     private $confidentialityCode;
     
@@ -90,7 +100,9 @@ class ClinicalDocument
     {
         $this->rootComponent = new Component\RootBodyComponent();
         
-        $this->typeId = new InstanceIdentifier("2.16.840.1.113883.1.3", "POCD_HD000040");
+        $typeIdIdentifier = new InstanceIdentifier("2.16.840.1.113883.1.3", 
+                "POCD_HD000040");
+        $this->typeId = new TypeId($typeIdIdentifier);
     }
     
     /**
@@ -104,10 +116,10 @@ class ClinicalDocument
 
     /**
      * 
-     * @param string $title
+     * @param \PHPHealth\CDA\Elements\Title $title
      * @return \PHPHealth\CDA2\ClinicalDocument
      */
-    function setTitle($title)
+    function setTitle(Title $title)
     {
         $this->title = $title;
         
@@ -116,7 +128,7 @@ class ClinicalDocument
     
     /**
      * 
-     * @return TimeStamp
+     * @return EffectiveTime
      */
     public function getEffectiveTime()
     {
@@ -125,26 +137,19 @@ class ClinicalDocument
 
     /**
      * 
-     * @param \DateTime|TimeStamp $effectiveTime
+     * @param EffectiveTime $effectiveTime
      * @return $this
      */
-    public function setEffectiveTime($effectiveTime)
+    public function setEffectiveTime(EffectiveTime $effectiveTime)
     {
-        if ($effectiveTime instanceof \DateTime) {
-            $this->effectiveTime = new TimeStamp($effectiveTime); 
-        } elseif ($effectiveTime instanceof TimeStamp) {
-            $this->effectiveTime = $effectiveTime;
-        } else {
-            throw new \InvalidArgumentException(sprintf("the effective time should be "
-                . "a %s or %s.", \DateTime::class, TimeStamp::class));
-        }
+        $this->effectiveTime = $effectiveTime;
         
         return $this;
     }
     
     /**
      * 
-     * @return InstanceIdentifier
+     * @return Id
      */
     public function getId()
     {
@@ -153,34 +158,54 @@ class ClinicalDocument
 
     /**
      * 
-     * @param InstanceIdentifier $id
+     * @param Id $id
      * @return $this
      */
-    public function setId(InstanceIdentifier $id)
+    public function setId(Id $id)
     {
         $this->id = $id;
         
         return $this;
     }
 
+    /**
+     * Get the code of the document
+     * 
+     * @return Code
+     */
     public function getCode()
     {
         return $this->code;
     }
 
-    public function setCode(CodedValue $code)
+    /**
+     * Set the code of the document
+     * 
+     * @param Code $code
+     * @return $this
+     */
+    public function setCode(Code $code)
     {
         $this->code = $code;
         
         return $this;
     }
     
+    /**
+     * 
+     * @return ConfidentialityCode
+     */
     public function getConfidentialityCode()
     {
         return $this->confidentialityCode;
     }
 
-    public function setConfidentialityCode(CodedValue $confidentialityCode)
+    /**
+     * 
+     * @param ConfidentialityCode $confidentialityCode
+     * @return $this
+     */
+    public function setConfidentialityCode(ConfidentialityCode $confidentialityCode)
     {
         $this->confidentialityCode = $confidentialityCode;
         
@@ -211,44 +236,36 @@ class ClinicalDocument
         $doc->setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 
             'xsi:schemaLocation','urn:hl7-org:v3 CDA.xsd');
         // add typeId
-        $typeId = $dom->createElement(self::NS_CDA.'typeId');
-        $this->typeId->setValueToElement($typeId);
-        $doc->appendChild($typeId);
+        $doc->appendChild($this->typeId->toDOMElement($dom));
         // add id
         if ($this->getId() !== null) {
-            $id = $dom->createElement('id');
-            $this->id->setValueToElement($id);
-            $doc->appendChild($id);
+            $doc->appendChild($this->getId()->toDOMElement($dom));
         }
         // add code
         if ($this->getCode() !== null) {
-            $code = (new Code())->setCodedValue($this->getCode());
-            $doc->appendChild($code->toDOMElement($dom));
+            $doc->appendChild($this->getCode()->toDOMElement($dom));
         }
         
         
         //add effective time
         if ($this->getEffectiveTime() !== null) {
-            $et = $dom->createElement('effectiveTime');
-            $this->effectiveTime->setValueToElement($et);
-            $doc->appendChild($et);
+            $doc->appendChild($this->getEffectiveTime()->toDOMElement($dom));
         }
         
         // add title
-        $doc->appendchild($dom->createElement('title', $this->title));
+        if ($this->getTitle() !== null) {
+            $doc->appendChild($this->getTitle()->toDOMElement($dom));
+        }
         
         // add cofidentialityCode
         if ($this->getConfidentialityCode() !== null) {
-            $confidentialityCode = (new Elements\ConfidentialityCode())->setCodedValue($this->getConfidentialityCode());
-            $doc->appendChild($confidentialityCode->toDOMElement($dom));
+            $doc->appendChild($this->confidentialityCode->toDOMElement($dom));
         }
 
         // add components
         if (!$this->getRootComponent()->isEmpty()) {
             $doc->appendChild($this->getRootComponent()->toDOMElement($dom));
         }
-        
-        $this->isInitialized = true;
         
         return $dom;
     }

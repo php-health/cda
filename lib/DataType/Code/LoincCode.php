@@ -2,7 +2,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 julien.
+ * Copyright 2016 julien.fastre@champs-libres.coop
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,48 +22,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-namespace PHPHealth\CDA\Elements;
+namespace PHPHealth\CDA\DataType\Code;
 
 use PHPHealth\CDA\DataType\Code\CodedValue;
 
 /**
- * Description of Code
+ * Template for Loinc Code
  *
  * @author julien
  */
-class Code extends AbstractElement
+class LoincCode
 {
-    /**
-     *
-     * @var CodedValue 
-     */
-    protected $codedValue;
+    const CODE_SYSTEM = '2.16.840.1.113883.6.1';
+    const CODE_SYSTEM_NAME = 'LOINC';
     
-    public function __construct(CodedValue $codedValue)
+    public static function create($code, $displayName)
     {
-        $this->setCodedValue($codedValue);
+        $codedValue = new CodedValue();
+        
+        return $codedValue->setCode($code)
+            ->setDisplayName($displayName)
+            ->setCodeSystem(self::CODE_SYSTEM)
+            ->setCodeSystemName(self::CODE_SYSTEM_NAME);
     }
-    
-    public function toDOMElement(\DOMDocument $doc)
-    {
-        return $this->createElement($doc, array ('codedValue'));
-    }
-    
-    public function getCodedValue()
-    {
-        return $this->codedValue;
-    }
-
-    public function setCodedValue(CodedValue $codedValue)
-    {
-        $this->codedValue = $codedValue;
-        return $this;
-    }
-    
-    public function getElementTag()
-    {
-        return "code";
-    }
-
 
 }

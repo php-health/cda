@@ -1,8 +1,9 @@
 <?php
+
 /*
  * The MIT License
  *
- * Copyright 2016 julien.
+ * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,48 +23,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 namespace PHPHealth\CDA\Elements;
 
-use PHPHealth\CDA\DataType\Code\CodedValue;
+use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
+
 
 /**
- * Description of Code
+ * 
  *
- * @author julien
+ * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Code extends AbstractElement
+class Title extends AbstractElement
 {
     /**
      *
-     * @var CodedValue 
+     * @var CharacterString 
      */
-    protected $codedValue;
+    protected $string;
     
-    public function __construct(CodedValue $codedValue)
+    public function __construct(CharacterString $string) 
     {
-        $this->setCodedValue($codedValue);
+        $this->setString($string);
     }
     
-    public function toDOMElement(\DOMDocument $doc)
+    public function getString()
     {
-        return $this->createElement($doc, array ('codedValue'));
-    }
-    
-    public function getCodedValue()
-    {
-        return $this->codedValue;
+        return $this->string;
     }
 
-    public function setCodedValue(CodedValue $codedValue)
+    public function setString(CharacterString $string)
     {
-        $this->codedValue = $codedValue;
+        $this->string = $string;
+        
         return $this;
     }
     
-    public function getElementTag()
+    protected function getElementTag()
     {
-        return "code";
+        return 'title';
     }
+
+    public function toDOMElement(\DOMDocument $doc)
+    {
+        $el = $this->createElement($doc);
+        $el->appendChild($doc->createTextNode($this->getString()->getContent()));
+        
+        return $el;
+    }
+
 
 
 }
