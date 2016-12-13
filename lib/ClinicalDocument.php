@@ -109,7 +109,7 @@ class ClinicalDocument
      * 
      * @return string
      */
-    function getTitle()
+    public function getTitle()
     {
         return $this->title;
     }
@@ -119,7 +119,7 @@ class ClinicalDocument
      * @param \PHPHealth\CDA\Elements\Title $title
      * @return \PHPHealth\CDA2\ClinicalDocument
      */
-    function setTitle(Title $title)
+    public function setTitle(Title $title)
     {
         $this->title = $title;
         
@@ -215,7 +215,7 @@ class ClinicalDocument
         
     /**
      * 
-     * @return Component\RootBodyComponent;
+     * @return Component\RootBodyComponent
      */
     public function getRootComponent()
     {
