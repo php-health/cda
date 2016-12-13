@@ -24,26 +24,64 @@
  * THE SOFTWARE.
  */
 
-namespace PHPHealth\CDA\DataType\Code;
+namespace PHPHealth\CDA\RIM\Role;
+
+use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
 
 /**
- * Coded data, specifying only a code, code system, and optionally display name 
- * and original text. Used only as the type of properties of other data types. 
  * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class CodedValue extends CodedWithEquivalents
+class PatientRole extends AbstractElement
 {
-    public function __construct(
-            $code,
-            $displayName,
-            $codeSystem,
-            $codeSystemName
-    ) {
-        $this->setCode($code);
-        $this->setDisplayName($displayName);
-        $this->setCodeSystem($codeSystem);
-        $this->setCodeSystemName($codeSystemName);
+    /**
+     *
+     * @var InstanceIdentifier[]
+     */
+    protected $patientIds = array();
+    
+    public function __construct(array $ids, $patient)
+    {
+        
     }
+    
+    /**
+     * 
+     * @return InstanceIdentifier[]
+     */
+    public function getPatientIds()
+    {
+        return $this->patientIds;
+    }
+
+    /**
+     * 
+     * @param InstanceIdentifier[] $patientIds
+     * @return $this
+     */
+    public function setPatientIds(array $patientIds)
+    {
+        $this->patientIds = $patientIds;
+        
+        return $this;
+    }
+    
+    public function addPatientId(InstanceIdentifier $ii)
+    {
+        $this->patientIds[] = $ii;
+    }
+
+        
+    protected function getElementTag()
+    {
+        return 'patientRole';
+    }
+
+    public function toDOMElement(\DOMDocument $doc)
+    {
+        
+    }
+
 }

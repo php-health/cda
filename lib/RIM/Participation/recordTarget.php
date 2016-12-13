@@ -1,8 +1,9 @@
 <?php
+
 /*
  * The MIT License
  *
- * Copyright 2016 julien.
+ * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,32 +23,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-namespace PHPHealth\CDA\Tests\TemplateCode;
 
-use PHPHealth\CDA\Elements\LoincCode;
-use PHPUnit\Framework\TestCase;
+namespace PHPHealth\CDA\RIM\Participation;
+
+use PHPHealth\CDA\Elements\AbstractElement;
 
 /**
- * Test Loinc Code
+ * 
  *
- * @author julien.fastre@champs-libres.coop
+ * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class LoincCodeTest extends TestCase
+class recordTarget extends AbstractElement
 {
-    public function testCode()
+    /**
+     *
+     * @var  
+     */
+    protected $patientRole;
+    
+    protected function getElementTag()
     {
-        $code = new LoincCode("57133-1", "REASON FOR REFERRAL");
-        
-        $expected = <<<'XML'
-<code code="57133-1" displayName="REASON FOR REFERRAL" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
-XML;
-        $expectedDoc = new \DOMDocument('1.0');
-        $expectedDoc->loadXML($expected);
-        $expectedCode = $expectedDoc
-                ->getElementsByTagName('code')
-                ->item(0);
-        
-        $this->assertEqualXMLStructure($expectedCode, 
-            $code->toDOMElement(new \DOMDocument()), true);
+        return 'recordTarget';
     }
+
+    public function toDOMElement(\DOMDocument $doc)
+    {
+        $el = $this->createElement($doc);
+        
+        return $el;
+    }
+
 }

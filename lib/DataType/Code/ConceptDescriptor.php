@@ -80,7 +80,7 @@ class ConceptDescriptor extends \PHPHealth\CDA\DataType\AnyType
     
     public function hasCodeSystem()
     {
-        return $this->getCodeSystem() !== null;
+        return !empty($this->getCodeSystem());
     }
 
     public function getCodeSystemName()
@@ -90,7 +90,7 @@ class ConceptDescriptor extends \PHPHealth\CDA\DataType\AnyType
     
     public function hasCodeSystemName()
     {
-        return $this->getCodeSystemName() !== null;
+        return !empty($this->getCodeSystemName());
     }
 
     public function getDisplayName()
@@ -100,7 +100,7 @@ class ConceptDescriptor extends \PHPHealth\CDA\DataType\AnyType
     
     public function hasDisplayName()
     {
-        return $this->getDisplayName() !== null;
+        return !empty($this->getDisplayName());
     }
 
     public function getOriginalText()
@@ -110,7 +110,7 @@ class ConceptDescriptor extends \PHPHealth\CDA\DataType\AnyType
     
     public function hasOriginalText()
     {
-        return $this->getOriginalText() !== null;
+        return !empty($this->getOriginalText());
     }
 
     public function setCodeSystem($codeSystem)

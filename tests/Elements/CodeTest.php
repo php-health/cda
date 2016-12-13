@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2016 julien.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,27 +22,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+namespace PHPHealth\CDA\Tests\TemplateCode;
 
-namespace PHPHealth\CDA\DataType\Code;
+use PHPHealth\CDA\Elements\Code;
+use PHPHealth\CDA\DataType\Code\LoincCode;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Coded data, specifying only a code, code system, and optionally display name 
- * and original text. Used only as the type of properties of other data types. 
- * 
+ * Test Loinc Code
  *
- * @author Julien Fastré <julien.fastre@champs-libres.coop>
+ * @author julien.fastre@champs-libres.coop
  */
-class CodedValue extends CodedWithEquivalents
+class CodeTest extends TestCase
 {
-    public function __construct(
-            $code,
-            $displayName,
-            $codeSystem,
-            $codeSystemName
-    ) {
-        $this->setCode($code);
-        $this->setDisplayName($displayName);
-        $this->setCodeSystem($codeSystem);
-        $this->setCodeSystemName($codeSystemName);
+    public function testCode()
+    {
+        $code = new Code(LoincCode::create("57133-1", "REASON FOR REFERRAL"));
+        
+        $expected = <<<'XML'
+<code code="57133-1" displayName="REASON FOR REFERRAL" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+XML;
+        $expectedDoc = new \DOMDocument('1.0');
+        $expectedDoc->loadXML($expected);
+        $expectedCode = $expectedDoc
+                ->getElementsByTagName('code')
+                ->item(0);
+        
+        $this->assertEqualXMLStructure($expectedCode, 
+            $code->toDOMElement(new \DOMDocument()), true);
     }
 }

@@ -24,26 +24,39 @@
  * THE SOFTWARE.
  */
 
-namespace PHPHealth\CDA\DataType\Code;
+namespace PHPHealth\CDA\Tests\DataType\Name;
+
+use PHPUnit\Framework\TestCase;
+use PHPHealth\CDA\DataType\Name\EntityName;
 
 /**
- * Coded data, specifying only a code, code system, and optionally display name 
- * and original text. Used only as the type of properties of other data types. 
- * 
+ * Test EntityName
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class CodedValue extends CodedWithEquivalents
+class EntityNameTest extends TestCase
 {
-    public function __construct(
-            $code,
-            $displayName,
-            $codeSystem,
-            $codeSystemName
-    ) {
-        $this->setCode($code);
-        $this->setDisplayName($displayName);
-        $this->setCodeSystem($codeSystem);
-        $this->setCodeSystemName($codeSystemName);
+    public function testEntityName()
+    {
+        $n = new EntityName("my name");
+        
+        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $el = $dom->createElement('el');
+        $dom->appendChild($el);
+        
+        $n->setValueToElement($el, $dom);
+        
+        $expected = <<<'CDA'
+<el><name>my name</name></el>
+CDA;
+        $expectedDoc = new \DOMDocument('1.0');
+        $expectedDoc->loadXML($expected);
+        $expectedEl = $expectedDoc
+                ->getElementsByTagName('el')
+                ->item(0);
+        
+        $this->assertEqualXMLStructure($expectedEl, $el, true);
+        
     }
+    
 }

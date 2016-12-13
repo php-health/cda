@@ -24,26 +24,20 @@
  * THE SOFTWARE.
  */
 
-namespace PHPHealth\CDA\DataType\Code;
+namespace PHPHealth\CDA\Elements;
 
 /**
- * Coded data, specifying only a code, code system, and optionally display name 
- * and original text. Used only as the type of properties of other data types. 
  * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class CodedValue extends CodedWithEquivalents
+class AdministrativeGenderCode extends Code
 {
-    public function __construct(
-            $code,
-            $displayName,
-            $codeSystem,
-            $codeSystemName
-    ) {
-        $this->setCode($code);
-        $this->setDisplayName($displayName);
-        $this->setCodeSystem($codeSystem);
-        $this->setCodeSystemName($codeSystemName);
+    
+    public function getElementTag()
+    {
+        return 'administrativeGenderCode';
     }
+
+    
 }

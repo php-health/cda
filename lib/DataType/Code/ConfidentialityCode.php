@@ -47,12 +47,8 @@ class ConfidentialityCode
     
     public static function create($key, $displayName)
     {
-        $codedValue = new CodedValue();
-        
-        return $codedValue->setCode($key)
-            ->setDisplayName($displayName)
-            ->setCodeSystem(self::CODE_SYSTEM)
-            ->setCodeSystemName(self::CODE_SYSTEM_NAME);
+        return new CodedValue($key, $displayName, self::CODE_SYSTEM, 
+                self::CODE_SYSTEM_NAME);
     }
     
 }

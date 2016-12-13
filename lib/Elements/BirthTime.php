@@ -24,26 +24,48 @@
  * THE SOFTWARE.
  */
 
-namespace PHPHealth\CDA\DataType\Code;
+namespace PHPHealth\CDA\Elements;
+
+use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
 
 /**
- * Coded data, specifying only a code, code system, and optionally display name 
- * and original text. Used only as the type of properties of other data types. 
  * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class CodedValue extends CodedWithEquivalents
+class BirthTime extends AbstractElement
 {
-    public function __construct(
-            $code,
-            $displayName,
-            $codeSystem,
-            $codeSystemName
-    ) {
-        $this->setCode($code);
-        $this->setDisplayName($displayName);
-        $this->setCodeSystem($codeSystem);
-        $this->setCodeSystemName($codeSystemName);
+    /**
+     *
+     * @var TimeStamp
+     */
+    protected $datetime;
+    
+    public function __construct(TimeStamp $datetime) 
+    {
+        $this->setDatetime($datetime);
     }
+    
+    public function getDatetime()
+    {
+        return $this->datetime;
+    }
+
+    public function setDatetime(TimeStamp $datetime)
+    {
+        $this->datetime = $datetime;
+        return $this;
+    }
+
+        
+    protected function getElementTag()
+    {
+        return 'birthTime';
+    }
+
+    public function toDOMElement(\DOMDocument $doc)
+    {
+        return $this->createElement($doc, array('datetime'));
+    }
+
 }
