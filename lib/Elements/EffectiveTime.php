@@ -29,7 +29,7 @@ namespace PHPHealth\CDA\Elements;
 use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -41,7 +41,7 @@ class EffectiveTime extends AbstractElement
      */
     protected $timestamp;
     
-    public function __construct(TimeStamp $timestamp) 
+    public function __construct(TimeStamp $timestamp)
     {
         $this->setTimestamp($timestamp);
     }
@@ -68,5 +68,4 @@ class EffectiveTime extends AbstractElement
     {
         return 'effectiveTime';
     }
-
 }

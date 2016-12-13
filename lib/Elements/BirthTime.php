@@ -29,7 +29,7 @@ namespace PHPHealth\CDA\Elements;
 use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -41,7 +41,7 @@ class BirthTime extends AbstractElement
      */
     protected $datetime;
     
-    public function __construct(TimeStamp $datetime) 
+    public function __construct(TimeStamp $datetime)
     {
         $this->setDatetime($datetime);
     }
@@ -67,5 +67,4 @@ class BirthTime extends AbstractElement
     {
         return $this->createElement($doc, array('datetime'));
     }
-
 }

@@ -47,7 +47,7 @@ class RootBodyComponent extends AbstractComponent
     }
     
     /**
-     * 
+     *
      * @return AbstractComponent[]
      */
     public function getComponents()
@@ -64,11 +64,10 @@ class RootBodyComponent extends AbstractComponent
     {
         $component = $doc->createElement('component');
         
-        foreach($this->getComponents() as $subComponent) {
+        foreach ($this->getComponents() as $subComponent) {
             $component->appendChild($subComponent->toDOMElement($doc));
         }
         
         return $component;
     }
-
 }

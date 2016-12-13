@@ -27,7 +27,7 @@
 namespace PHPHealth\CDA\Elements;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -38,6 +38,4 @@ class AdministrativeGenderCode extends Code
     {
         return 'administrativeGenderCode';
     }
-
-    
 }

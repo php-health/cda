@@ -30,7 +30,7 @@ use PHPHealth\CDA\ElementInterface;
 
 /**
  * A base class for components
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */

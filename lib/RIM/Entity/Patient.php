@@ -35,7 +35,7 @@ use PHPHealth\CDA\DataType\Code\CodedValue;
 use PHPHealth\CDA\Elements\BirthTime;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -43,7 +43,7 @@ class Patient implements ElementInterface
 {
     /**
      *
-     * @var Set|\PHPHealth\CDA\DataType\Name\PersonName[] 
+     * @var Set|\PHPHealth\CDA\DataType\Name\PersonName[]
      */
     protected $names;
     
@@ -60,9 +60,9 @@ class Patient implements ElementInterface
     protected $administrativeGenderCode;
     
     public function __construct(
-            Set $names = null,
-            TimeStamp $birthtime = null,
-            CodedValue $administrativeGenderCode = null
+        Set $names = null,
+        TimeStamp $birthtime = null,
+        CodedValue $administrativeGenderCode = null
     ) {
         if ($names !== null) {
             $this->setNames($names);
@@ -132,5 +132,4 @@ class Patient implements ElementInterface
         
         return $el;
     }
-
 }

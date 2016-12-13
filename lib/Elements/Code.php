@@ -35,7 +35,7 @@ class Code extends AbstractElement
 {
     /**
      *
-     * @var CodedValue 
+     * @var CodedValue
      */
     protected $codedValue;
     
@@ -64,6 +64,4 @@ class Code extends AbstractElement
     {
         return "code";
     }
-
-
 }

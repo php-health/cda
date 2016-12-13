@@ -27,19 +27,19 @@
 namespace PHPHealth\CDA\DataType\Code;
 
 /**
- * Coded data, specifying only a code, code system, and optionally display name 
- * and original text. Used only as the type of properties of other data types. 
- * 
+ * Coded data, specifying only a code, code system, and optionally display name
+ * and original text. Used only as the type of properties of other data types.
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
 class CodedValue extends CodedWithEquivalents
 {
     public function __construct(
-            $code,
-            $displayName,
-            $codeSystem,
-            $codeSystemName
+        $code,
+        $displayName,
+        $codeSystem,
+        $codeSystemName
     ) {
         $this->setCode($code);
         $this->setDisplayName($displayName);

@@ -29,7 +29,7 @@ namespace PHPHealth\CDA\Elements;
 use PHPHealth\CDA\Elements\Code;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -39,5 +39,4 @@ class ConfidentialityCode extends Code
     {
         return 'confidentialityCode';
     }
-
 }

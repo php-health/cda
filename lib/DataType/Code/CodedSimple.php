@@ -27,10 +27,10 @@
 namespace PHPHealth\CDA\DataType\Code;
 
 /**
- * Coded data in its simplest form, where only the code is not predetermined. 
- * The code system and code system version are fixed by the context in which 
- * the CS value occurs. CS is used for coded attributes that have a single 
- * HL7-defined value set. 
+ * Coded data in its simplest form, where only the code is not predetermined.
+ * The code system and code system version are fixed by the context in which
+ * the CS value occurs. CS is used for coded attributes that have a single
+ * HL7-defined value set.
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */

@@ -27,20 +27,20 @@
 namespace PHPHealth\CDA\DataType\TextAndMultimedia;
 
 /**
- * 
- * The CDA description is : 
+ *
+ * The CDA description is :
  * ========================
- * 
- * BIN is a raw block of bits. BIN is a protected type that should not be 
- * declared outside the data type specification. A bit is semantically identical 
- * with a non-null BL value. Thus, all binary data is — semantically — a 
- * sequence of non-null BL values. 
- * 
+ *
+ * BIN is a raw block of bits. BIN is a protected type that should not be
+ * declared outside the data type specification. A bit is semantically identical
+ * with a non-null BL value. Thus, all binary data is — semantically — a
+ * sequence of non-null BL values.
+ *
  * In this library
  * ===============
- * 
+ *
  * The content is inserted inside a simple content.
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */

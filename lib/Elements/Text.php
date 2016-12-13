@@ -29,7 +29,7 @@ namespace PHPHealth\CDA\Elements;
 use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -52,7 +52,5 @@ class Text implements \PHPHealth\CDA\ElementInterface
         
     public function toDOMElement()
     {
-        
     }
-
 }

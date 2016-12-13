@@ -27,11 +27,11 @@
 namespace PHPHealth\CDA\DataType\Code;
 
 /**
- * Coded data, where the coding system from which the code comes is ordered. 
- * CO adds semantics related to ordering so that models that make use of such 
- * domains may introduce model elements that involve statements about the 
+ * Coded data, where the coding system from which the code comes is ordered.
+ * CO adds semantics related to ordering so that models that make use of such
+ * domains may introduce model elements that involve statements about the
  * order of the terms in a domain.
- * 
+ *
  * ```
  * type CodedOrdinal alias CO specializes CV {
  * BL  lessOrEqual(CO o);
@@ -40,10 +40,10 @@ namespace PHPHealth\CDA\DataType\Code;
  * BL  greaterOrEqual(CO o);
  * };
  * ```
- * 
- * The relative order of CO values need not be independently obvious in their 
- * literal representation. It is expected that an application will look up the 
- * ordering of these values from some table. 
+ *
+ * The relative order of CO values need not be independently obvious in their
+ * literal representation. It is expected that an application will look up the
+ * ordering of these values from some table.
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */

@@ -29,7 +29,7 @@ namespace PHPHealth\CDA\DataType\Name;
 use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -68,7 +68,7 @@ class PersonName extends EntityName
             $name = $doc->createElement(CDA::NS_CDA.'name');
             $el->appendChild($name);
             
-            foreach($this->parts as $part => $value) {
+            foreach ($this->parts as $part => $value) {
                 $partElement = $doc->createElement(CDA::NS_CDA.$part, $value);
                 $name->appendChild($partElement);
             }
@@ -79,6 +79,4 @@ class PersonName extends EntityName
                     . "parts nor string");
         }
     }
-    
-
 }

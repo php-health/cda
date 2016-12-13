@@ -47,11 +47,11 @@ class ClinicalDocument
     
     /**
      * the templateId of the document. Will be inserted into doc, like
-     * 
+     *
      * ```
      * <typeId>
      * ```
-     * 
+     *
      * TODO : always equals to '2.16.840.1.113883.3.27.1776'
      *
      * @var TypeId
@@ -68,7 +68,7 @@ class ClinicalDocument
     /**
      * the root component
      *
-     * @var Component\RootBodyComponent 
+     * @var Component\RootBodyComponent
      */
     private $rootComponent;
     
@@ -86,7 +86,7 @@ class ClinicalDocument
     
     /**
      *
-     * @var Code 
+     * @var Code
      */
     private $code;
     
@@ -100,13 +100,15 @@ class ClinicalDocument
     {
         $this->rootComponent = new Component\RootBodyComponent();
         
-        $typeIdIdentifier = new InstanceIdentifier("2.16.840.1.113883.1.3", 
-                "POCD_HD000040");
+        $typeIdIdentifier = new InstanceIdentifier(
+            "2.16.840.1.113883.1.3",
+            "POCD_HD000040"
+        );
         $this->typeId = new TypeId($typeIdIdentifier);
     }
     
     /**
-     * 
+     *
      * @return string
      */
     public function getTitle()
@@ -115,7 +117,7 @@ class ClinicalDocument
     }
 
     /**
-     * 
+     *
      * @param \PHPHealth\CDA\Elements\Title $title
      * @return \PHPHealth\CDA2\ClinicalDocument
      */
@@ -127,7 +129,7 @@ class ClinicalDocument
     }
     
     /**
-     * 
+     *
      * @return EffectiveTime
      */
     public function getEffectiveTime()
@@ -136,7 +138,7 @@ class ClinicalDocument
     }
 
     /**
-     * 
+     *
      * @param EffectiveTime $effectiveTime
      * @return $this
      */
@@ -148,7 +150,7 @@ class ClinicalDocument
     }
     
     /**
-     * 
+     *
      * @return Id
      */
     public function getId()
@@ -157,7 +159,7 @@ class ClinicalDocument
     }
 
     /**
-     * 
+     *
      * @param Id $id
      * @return $this
      */
@@ -170,7 +172,7 @@ class ClinicalDocument
 
     /**
      * Get the code of the document
-     * 
+     *
      * @return Code
      */
     public function getCode()
@@ -180,7 +182,7 @@ class ClinicalDocument
 
     /**
      * Set the code of the document
-     * 
+     *
      * @param Code $code
      * @return $this
      */
@@ -192,7 +194,7 @@ class ClinicalDocument
     }
     
     /**
-     * 
+     *
      * @return ConfidentialityCode
      */
     public function getConfidentialityCode()
@@ -201,7 +203,7 @@ class ClinicalDocument
     }
 
     /**
-     * 
+     *
      * @param ConfidentialityCode $confidentialityCode
      * @return $this
      */
@@ -214,7 +216,7 @@ class ClinicalDocument
 
         
     /**
-     * 
+     *
      * @return Component\RootBodyComponent
      */
     public function getRootComponent()
@@ -223,7 +225,7 @@ class ClinicalDocument
     }
     
     /**
-     * 
+     *
      * @return \DOMDocument
      */
     public function toDOMDocument()
@@ -233,8 +235,11 @@ class ClinicalDocument
         $doc = $dom->createElementNS('urn:hl7-org:v3', 'ClinicalDocument');
         $dom->appendChild($doc);
         // set the NS
-        $doc->setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 
-            'xsi:schemaLocation','urn:hl7-org:v3 CDA.xsd');
+        $doc->setAttributeNS(
+            'http://www.w3.org/2001/XMLSchema-instance',
+            'xsi:schemaLocation',
+            'urn:hl7-org:v3 CDA.xsd'
+        );
         // add typeId
         $doc->appendChild($this->typeId->toDOMElement($dom));
         // add id
@@ -269,6 +274,4 @@ class ClinicalDocument
         
         return $dom;
     }
-    
-    
 }

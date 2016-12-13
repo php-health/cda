@@ -29,14 +29,14 @@ namespace PHPHealth\CDA\DataType\Code;
 use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
- * A CD represents any kind of concept usually by giving a code defined in a 
- * code system. A CD can contain the original text or phrase that served as the 
- * basis of the coding and one or more translations into different coding systems. 
- * A CD can also contain qualifiers to describe, e.g., the concept of a 
- * "left foot" as a postcoordinated term built from the primary code "FOOT" 
- * and the qualifier "LEFT". In cases of an exceptional value, the CD need 
- * not contain a code but only the original text describing that concept. 
- * 
+ * A CD represents any kind of concept usually by giving a code defined in a
+ * code system. A CD can contain the original text or phrase that served as the
+ * basis of the coding and one or more translations into different coding systems.
+ * A CD can also contain qualifiers to describe, e.g., the concept of a
+ * "left foot" as a postcoordinated term built from the primary code "FOOT"
+ * and the qualifier "LEFT". In cases of an exceptional value, the CD need
+ * not contain a code but only the original text describing that concept.
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -71,7 +71,7 @@ class ConceptDescriptor extends \PHPHealth\CDA\DataType\AnyType
         $this->code = $code;
         
         return $this;
-    }   
+    }
     
     public function getCodeSystem()
     {

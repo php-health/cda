@@ -27,16 +27,16 @@
 namespace PHPHealth\CDA\DataType\Name;
 
 /**
- * A name for a person, organization, place or thing. A sequence of name parts, 
- * such as given name or family name, prefix, suffix, etc. Examples for entity 
- * name values are "Jim Bob Walton, Jr.", "Health Level Seven, Inc.", 
- * "Lake Tahoe", etc. An entity name may be as simple as a character string or 
- * may consist of several entity name parts, such as, "Jim", "Bob", "Walton", 
+ * A name for a person, organization, place or thing. A sequence of name parts,
+ * such as given name or family name, prefix, suffix, etc. Examples for entity
+ * name values are "Jim Bob Walton, Jr.", "Health Level Seven, Inc.",
+ * "Lake Tahoe", etc. An entity name may be as simple as a character string or
+ * may consist of several entity name parts, such as, "Jim", "Bob", "Walton",
  * and "Jr.", "Health Level Seven" and "Inc.", "Lake" and "Tahoe".
- * 
- * Structurally, the entity name data type is a sequence of entity name part 
- * values with an added "use" code and a valid time range for information about 
- * if and when the name can be used for a given purpose. 
+ *
+ * Structurally, the entity name data type is a sequence of entity name part
+ * values with an added "use" code and a valid time range for information about
+ * if and when the name can be used for a given purpose.
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -71,5 +71,4 @@ class EntityName extends \PHPHealth\CDA\DataType\AnyType
         
         $el->appendChild($name);
     }
-
 }

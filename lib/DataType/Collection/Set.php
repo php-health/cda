@@ -30,15 +30,15 @@ use PHPHealth\CDA\DataType\AnyType;
 
 /**
  * Set of elements.
- * 
+ *
  * This class restrict the sub element to the same element name. This name
  * cannot be changed after the construction of this class.
- * 
- * Example of initializsation : 
- * 
+ *
+ * Example of initializsation :
+ *
  * ```
  * use PHPHealth\CDA\DataType\Name\PersonName;
- * 
+ *
  * new Set(PersonName::class);
  * ```
  *
@@ -56,7 +56,7 @@ class Set extends AnyType
     private $elementName;
     
     /**
-     * 
+     *
      * @param string $elementName the class of the element to restrict
      */
     public function __construct($elementName)
@@ -96,18 +96,20 @@ class Set extends AnyType
         }
         
         if ($this->elements[0] instanceof AnyType) {
-            foreach($this->elements as $sub) {
+            foreach ($this->elements as $sub) {
                 $sub->setValueToElement($el, $doc);
             }
         } elseif ($this->elements[0] instanceof \PHPHealth\CDA\ElementInterface) {
-            foreach($this->elements as $sub) {
+            foreach ($this->elements as $sub) {
                 $el->appendChild($sub->toDOMElement($doc));
             }
         } else {
-            throw new \LogicException(sprintf("the elements added to set are "
-                    . "not instance of %s nor %s", AnyType::class, 
-                    \PHPHealth\CDA\ElementInterface::class));
+            throw new \LogicException(sprintf(
+                "the elements added to set are "
+                    . "not instance of %s nor %s",
+                AnyType::class,
+                \PHPHealth\CDA\ElementInterface::class
+            ));
         }
     }
-
 }

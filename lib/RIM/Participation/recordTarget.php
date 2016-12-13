@@ -29,7 +29,7 @@ namespace PHPHealth\CDA\RIM\Participation;
 use PHPHealth\CDA\Elements\AbstractElement;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -37,7 +37,7 @@ class recordTarget extends AbstractElement
 {
     /**
      *
-     * @var  
+     * @var
      */
     protected $patientRole;
     
@@ -52,5 +52,4 @@ class recordTarget extends AbstractElement
         
         return $el;
     }
-
 }

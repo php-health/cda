@@ -38,8 +38,11 @@ class LoincCode
     
     public static function create($code, $displayName)
     {
-        return new CodedValue($code, $displayName, self::CODE_SYSTEM, 
-                self::CODE_SYSTEM_NAME);
+        return new CodedValue(
+            $code,
+            $displayName,
+            self::CODE_SYSTEM,
+            self::CODE_SYSTEM_NAME
+        );
     }
-
 }

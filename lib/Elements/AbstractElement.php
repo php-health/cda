@@ -29,7 +29,7 @@ namespace PHPHealth\CDA\Elements;
 use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -37,7 +37,7 @@ abstract class AbstractElement implements \PHPHealth\CDA\ElementInterface
 {
     /**
      * get the element tag name
-     * 
+     *
      * @return string
      */
     abstract protected function getElementTag();
@@ -45,7 +45,7 @@ abstract class AbstractElement implements \PHPHealth\CDA\ElementInterface
     /**
      * create an element with the tag given by self::getElementTag and
      * apply this element to datatype given by $properties
-     * 
+     *
      * @param \DOMDocument $doc
      * @param string[] $properties the name of the properties to apply on element
      * @return \DOMElement
@@ -56,12 +56,11 @@ abstract class AbstractElement implements \PHPHealth\CDA\ElementInterface
         $el = $doc->createElement(CDA::NS_CDA.$this->getElementTag());
         
         if (count($properties) > 0) {
-            foreach($properties as $property) {
+            foreach ($properties as $property) {
                 $this->{$property}->setValueToElement($el);
             }
         }
         
         return $el;
     }
-    
 }

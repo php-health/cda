@@ -27,7 +27,7 @@
 namespace PHPHealth\CDA\DataType\TextAndMultimedia;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -47,6 +47,4 @@ class CharacterString extends EncapsuledData
         
         parent::setContent($content);
     }
-
-    
 }

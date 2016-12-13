@@ -29,7 +29,7 @@ namespace PHPHealth\CDA\Elements;
 use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -37,11 +37,11 @@ class TypeId extends AbstractElement
 {
     /**
      *
-     * @var InstanceIdentifier 
+     * @var InstanceIdentifier
      */
     protected $identifier;
     
-    public function __construct(InstanceIdentifier $identifier) 
+    public function __construct(InstanceIdentifier $identifier)
     {
         $this->setIdentifier($identifier);
     }
@@ -59,7 +59,7 @@ class TypeId extends AbstractElement
 
     /**
      * {@overrideDoc}
-     * 
+     *
      * @param \DOMDocument $doc
      * @return type
      */
@@ -72,5 +72,4 @@ class TypeId extends AbstractElement
     {
         return 'typeId';
     }
-
 }

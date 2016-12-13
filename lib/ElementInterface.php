@@ -36,7 +36,7 @@ interface ElementInterface
     /**
      * Transforms the element into a DOMElement, which will be included
      * into the final CDA XML
-     * 
+     *
      * @return \DOMElement
      */
     public function toDOMElement(\DOMDocument $doc);

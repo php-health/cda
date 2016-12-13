@@ -28,9 +28,8 @@ namespace PHPHealth\CDA\Elements;
 
 use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
 
-
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -38,11 +37,11 @@ class Title extends AbstractElement
 {
     /**
      *
-     * @var CharacterString 
+     * @var CharacterString
      */
     protected $string;
     
-    public function __construct(CharacterString $string) 
+    public function __construct(CharacterString $string)
     {
         $this->setString($string);
     }
@@ -71,7 +70,4 @@ class Title extends AbstractElement
         
         return $el;
     }
-
-
-
 }

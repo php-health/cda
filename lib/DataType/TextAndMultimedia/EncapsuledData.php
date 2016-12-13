@@ -29,13 +29,13 @@ namespace PHPHealth\CDA\DataType\TextAndMultimedia;
 use PHPHealth\CDA\ClinicalDocument as CD;
 
 /**
- * Data that is primarily intended for human interpretation or for further 
- * machine processing outside the scope of HL7. This includes unformatted or 
- * formatted written language, multimedia data, or structured information in as 
- * defined by a different standard (e.g., XML-signatures.) Instead of the data 
- * itself, an ED may contain only a reference (see TEL.) Note that ST is a 
- * specialization of the ED where the mediaType is fixed to text/plain. 
- * 
+ * Data that is primarily intended for human interpretation or for further
+ * machine processing outside the scope of HL7. This includes unformatted or
+ * formatted written language, multimedia data, or structured information in as
+ * defined by a different standard (e.g., XML-signatures.) Instead of the data
+ * itself, an ED may contain only a reference (see TEL.) Note that ST is a
+ * specialization of the ED where the mediaType is fixed to text/plain.
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -156,7 +156,5 @@ class EncapsuledData extends BinaryData
         }
         
         $el->appendChild($content);
-        
     }
-    
 }

@@ -27,7 +27,7 @@ namespace PHPHealth\CDA\DataType\Code;
 use PHPHealth\CDA\DataType\Code\CodedValue;
 
 /**
- * 
+ *
  *
  * @author julien
  */
@@ -47,8 +47,11 @@ class ConfidentialityCode
     
     public static function create($key, $displayName)
     {
-        return new CodedValue($key, $displayName, self::CODE_SYSTEM, 
-                self::CODE_SYSTEM_NAME);
+        return new CodedValue(
+            $key,
+            $displayName,
+            self::CODE_SYSTEM,
+            self::CODE_SYSTEM_NAME
+        );
     }
-    
 }

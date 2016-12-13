@@ -30,7 +30,7 @@ use PHPHealth\CDA\Elements\AbstractElement;
 use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -44,11 +44,10 @@ class PatientRole extends AbstractElement
     
     public function __construct(array $ids, $patient)
     {
-        
     }
     
     /**
-     * 
+     *
      * @return InstanceIdentifier[]
      */
     public function getPatientIds()
@@ -57,7 +56,7 @@ class PatientRole extends AbstractElement
     }
 
     /**
-     * 
+     *
      * @param InstanceIdentifier[] $patientIds
      * @return $this
      */
@@ -81,7 +80,5 @@ class PatientRole extends AbstractElement
 
     public function toDOMElement(\DOMDocument $doc)
     {
-        
     }
-
 }

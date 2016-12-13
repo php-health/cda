@@ -31,8 +31,8 @@ use PHPHealth\CDA\ClinicalDocument as CD;
 
 /**
  * Component which contains unstructured content
- * 
- * 
+ *
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -68,5 +68,4 @@ class NonXMLBodyComponent extends AbstractComponent
         
         return $component;
     }
-
 }

@@ -29,7 +29,7 @@ namespace PHPHealth\CDA\Elements;
 use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
 
 /**
- * 
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -42,7 +42,7 @@ class Id extends AbstractElement
     protected $identifier;
     
     
-    public function __construct(InstanceIdentifier $identifier) 
+    public function __construct(InstanceIdentifier $identifier)
     {
         $this->setIdentifier($identifier);
     }
@@ -69,5 +69,4 @@ class Id extends AbstractElement
     {
         return $this->createElement($doc, array('identifier'));
     }
-
 }

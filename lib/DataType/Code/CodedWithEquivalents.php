@@ -27,10 +27,10 @@
 namespace PHPHealth\CDA\DataType\Code;
 
 /**
- * Coded data that consists of a coded value and, optionally, coded value(s) 
- * from other coding systems that identify the same concept. Used when 
- * alternative codes may exist. 
- * 
+ * Coded data that consists of a coded value and, optionally, coded value(s)
+ * from other coding systems that identify the same concept. Used when
+ * alternative codes may exist.
+ *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */

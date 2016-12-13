@@ -28,10 +28,10 @@ use PHPHealth\CDA\DataType\AnyType;
 use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
- * An identifier that uniquely identifies a thing or object. Examples are object 
- * identifier for HL7 RIM objects, medical record number, order id, service 
- * catalog item id, Vehicle Identification Number (VIN), etc. Instance 
- * identifiers are defined based on ISO object identifiers. 
+ * An identifier that uniquely identifies a thing or object. Examples are object
+ * identifier for HL7 RIM objects, medical record number, order id, service
+ * catalog item id, Vehicle Identification Number (VIN), etc. Instance
+ * identifiers are defined based on ISO object identifiers.
  *
  * @author julien
  */
@@ -45,7 +45,7 @@ class InstanceIdentifier extends AnyType
     
     /**
      *
-     * @var string 
+     * @var string
      */
     private $extension;
     
@@ -120,8 +120,10 @@ class InstanceIdentifier extends AnyType
         }
         
         if ($this->hasAssigningAuthorityName()) {
-            $el->setAttribute(CDA::NS_CDA."assigningAuthorityName", 
-                $this->getAssigningAuthorityName());
+            $el->setAttribute(
+                CDA::NS_CDA."assigningAuthorityName",
+                $this->getAssigningAuthorityName()
+            );
         }
     }
 }
