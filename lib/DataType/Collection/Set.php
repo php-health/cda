@@ -100,7 +100,9 @@ class Set extends AnyType
                 $sub->setValueToElement($el, $doc);
             }
         } elseif ($this->elements[0] instanceof \PHPHealth\CDA\ElementInterface) {
-            $el->appendChild($sub->toDOMElement($doc));
+            foreach($this->elements as $sub) {
+                $el->appendChild($sub->toDOMElement($doc));
+            }
         } else {
             throw new \LogicException(sprintf("the elements added to set are "
                     . "not instance of %s nor %s", AnyType::class, 
