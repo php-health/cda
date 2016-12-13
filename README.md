@@ -1,6 +1,8 @@
 # cda
 
-Create HL7-CDA (r) documents in PHP.
+Create HL7-CDA (tm) documents in PHP.
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/php-health/cda/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/php-health/cda/?branch=master)
 
 ## Usage
 
