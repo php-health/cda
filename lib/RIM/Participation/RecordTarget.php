@@ -27,20 +27,38 @@
 namespace PHPHealth\CDA\RIM\Participation;
 
 use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\RIM\Role\PatientRole;
 
 /**
  *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class recordTarget extends AbstractElement
+class RecordTarget extends AbstractElement
 {
     /**
      *
-     * @var
+     * @var PatientRole
      */
     protected $patientRole;
     
+    public function __construct(PatientRole $patientRole)
+    {
+        $this->setPatientRole($patientRole);
+    }
+    
+    public function getPatientRole()
+    {
+        return $this->patientRole;
+    }
+
+    public function setPatientRole(PatientRole $patientRole)
+    {
+        $this->patientRole = $patientRole;
+        return $this;
+    }
+
+        
     protected function getElementTag()
     {
         return 'recordTarget';
@@ -49,6 +67,8 @@ class recordTarget extends AbstractElement
     public function toDOMElement(\DOMDocument $doc)
     {
         $el = $this->createElement($doc);
+        
+        $el->appendChild($this->patientRole->toDOMElement($doc));
         
         return $el;
     }

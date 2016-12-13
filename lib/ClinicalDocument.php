@@ -35,6 +35,7 @@ use PHPHealth\CDA\Elements\EffectiveTime;
 use PHPHealth\CDA\Elements\Id;
 use PHPHealth\CDA\Elements\ConfidentialityCode;
 use PHPHealth\CDA\Elements\TypeId;
+use PHPHealth\CDA\RIM\Participation\RecordTarget;
 
 /**
  * Root class for clinical document
@@ -89,6 +90,12 @@ class ClinicalDocument
      * @var Code
      */
     private $code;
+    
+    /**
+     *
+     * @var RecordTarget
+     */
+    private $recordTarget;
     
     /**
      *
@@ -224,6 +231,19 @@ class ClinicalDocument
         return $this->rootComponent;
     }
     
+    public function getRecordTarget()
+    {
+        return $this->recordTarget;
+    }
+
+    public function setRecordTarget(RecordTarget $recordTarget)
+    {
+        $this->recordTarget = $recordTarget;
+        
+        return $this;
+    }
+
+        
     /**
      *
      * @return \DOMDocument
@@ -250,21 +270,25 @@ class ClinicalDocument
         if ($this->getCode() !== null) {
             $doc->appendChild($this->getCode()->toDOMElement($dom));
         }
-        
-        
-        //add effective time
-        if ($this->getEffectiveTime() !== null) {
-            $doc->appendChild($this->getEffectiveTime()->toDOMElement($dom));
-        }
-        
+     
         // add title
         if ($this->getTitle() !== null) {
             $doc->appendChild($this->getTitle()->toDOMElement($dom));
         }
         
-        // add cofidentialityCode
+        //add effective time
+        if ($this->getEffectiveTime() !== null) {
+            $doc->appendChild($this->getEffectiveTime()->toDOMElement($dom));
+        }
+
+        // add confidentialityCode
         if ($this->getConfidentialityCode() !== null) {
             $doc->appendChild($this->confidentialityCode->toDOMElement($dom));
+        }
+        
+        // add recordTarget
+        if ($this->getRecordTarget() !== null) {
+            $doc->appendChild($this->recordTarget->toDOMElement($dom));
         }
 
         // add components

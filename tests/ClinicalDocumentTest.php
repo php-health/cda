@@ -39,6 +39,12 @@ use PHPHealth\CDA\Elements\EffectiveTime;
 use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
 use PHPHealth\CDA\Elements\Id;
 use PHPHealth\CDA\Elements\Code;
+use PHPHealth\CDA\DataType\Name\PersonName;
+use PHPHealth\CDA\DataType\Code\CodedValue;
+use PHPHealth\CDA\RIM\Role\PatientRole;
+use PHPHealth\CDA\DataType\Collection\Set;
+use PHPHealth\CDA\RIM\Entity\Patient;
+use PHPHealth\CDA\RIM\Participation\RecordTarget;
 
 /**
  * 
@@ -105,13 +111,11 @@ CDA;
         $doc->setId(new Id(new InstanceIdentifier("1.2.3.4", "https://mass.chill.pro")));
         $doc->setCode(new Code(LoincCode::create('42349-1', 'REASON FOR REFERRAL')));
         $doc->setConfidentialityCode(new ConfidentialityCode(ConfidentialityCodeType::create(ConfidentialityCodeType::RESTRICTED_KEY, ConfidentialityCodeType::RESTRICTED)));
+        $doc->setRecordTarget($this->getRecordTarget());
         
         $nonXMLBody = new NonXMLBodyComponent();
-        $string = new CharacterString();
-        $string->setContent("This is a narrative text");
-        $nonXMLBody->setContent($string);
+        $nonXMLBody->setContent(new CharacterString("This is a narrative text"));
         $doc->getRootComponent()->addComponent($nonXMLBody);
-        
         
         $clinicalElements = $doc->toDOMDocument()
                 ->getElementsByTagName('ClinicalDocument');
@@ -124,11 +128,24 @@ CDA;
 <ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 CDA.xsd">
     <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
     <id root="1.2.3.4" extension="https://mass.chill.pro" />
-    <code code='42349-1' displayName='REASON FOR REFERRAL' codeSystem='2.16.840.1.113883.6.1' codeSystemName='LOINC'/>
-    <effectiveTime value="201408270143"/>	
+    <code code='42349-1' displayName='REASON FOR REFERRAL' codeSystem='2.16.840.1.113883.6.1' codeSystemName='LOINC'/>	
     <title>Good Health Clinic Consultation Note</title>
+    <effectiveTime value="201408270143"/>
     <confidentialityCode code="R" displayName="Restricted" codeSystem="2.16.840.1.113883.5.25" codeSystemName="Confidentiality"/>
-
+    <recordTarget>
+        <patientRole>
+            <id extension="12345" root="2.16.840.1.113883.19.5"/>
+            <patient>
+                <name>
+                    <given>Henry</given>
+                    <family>Levin</family>
+                    <suffix>the 7th</suffix>
+                </name>
+                <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1"/>
+                <birthTime value="19320924"/>
+            </patient>
+        </patientRole>  
+    </recordTarget>
     <component>
         <nonXMLBody>
             <text mediaType="text/plain"><![CDATA[
@@ -153,5 +170,39 @@ CDA;
         $this->assertEqualXMLStructure(
                 $expectedClinicalElement, $clinicalElement, true,
                 "test the document is equal to expected");
+    }
+    
+    
+    
+    
+    protected function getRecordTarget()
+    {
+        $pr = new PatientRole($this->getPatientsIds(), $this->getPatient());
+        
+        return new RecordTarget($pr);
+    }
+    
+    protected function getPatientsIds()
+    {
+        $set = new Set(InstanceIdentifier::class);
+        $set->add(new InstanceIdentifier('2.16.840.1.113883.19.5', '12345'));
+        
+        return $set;
+    }
+    
+    protected function getPatient()
+    {
+        $names = new Set(PersonName::class);
+        $names->add((new PersonName())
+                ->addPart(PersonName::FIRST_NAME, 'Henry')
+                ->addPart(PersonName::LAST_NAME, 'Levin')
+                ->addPart('suffix', 'the 7th'));
+        $patient = new Patient(
+                $names, 
+                new TimeStamp(\DateTime::createFromFormat('Y-m-d', '1932-09-24')),
+                new CodedValue('M', '', "2.16.840.1.113883.5.1", '')
+                );
+        
+        return $patient;
     }
 }

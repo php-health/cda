@@ -33,6 +33,12 @@ namespace PHPHealth\CDA\DataType\TextAndMultimedia;
  */
 class CharacterString extends EncapsuledData
 {
+    
+    public function __construct($content)
+    {
+        $this->setContent($content);
+    }
+    
     public function getMediaType()
     {
         return 'text/plain';

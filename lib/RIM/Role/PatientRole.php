@@ -28,6 +28,9 @@ namespace PHPHealth\CDA\RIM\Role;
 
 use PHPHealth\CDA\Elements\AbstractElement;
 use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
+use PHPHealth\CDA\DataType\Collection\Set;
+use PHPHealth\CDA\RIM\Entity\Patient;
+use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
  *
@@ -38,17 +41,27 @@ class PatientRole extends AbstractElement
 {
     /**
      *
-     * @var InstanceIdentifier[]
+     * @var Set
      */
-    protected $patientIds = array();
+    protected $patientIds;
     
-    public function __construct(array $ids, $patient)
-    {
+    /**
+     *
+     * @var Patient
+     */
+    protected $patient;
+    
+    public function __construct(
+        Set $ids,
+        Patient $patient
+    ) {
+        $this->setPatientIds($ids);
+        $this->setPatient($patient);
     }
     
     /**
      *
-     * @return InstanceIdentifier[]
+     * @return Set
      */
     public function getPatientIds()
     {
@@ -57,11 +70,17 @@ class PatientRole extends AbstractElement
 
     /**
      *
-     * @param InstanceIdentifier[] $patientIds
+     * @param Set $patientIds
      * @return $this
      */
-    public function setPatientIds(array $patientIds)
+    public function setPatientIds(Set $patientIds)
     {
+        if ($patientIds->getElementName() !== InstanceIdentifier::class) {
+            throw new \UnexpectedValueException("The values of patientsIds shoud"
+                    . " be instances of ".InstanceIdentifier::class.", "
+                    . "".$patientIds->getElementName()." given");
+        }
+        
         $this->patientIds = $patientIds;
         
         return $this;
@@ -72,7 +91,18 @@ class PatientRole extends AbstractElement
         $this->patientIds[] = $ii;
     }
 
-        
+    public function getPatient()
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(Patient $patient)
+    {
+        $this->patient = $patient;
+        return $this;
+    }
+
+            
     protected function getElementTag()
     {
         return 'patientRole';
@@ -80,5 +110,16 @@ class PatientRole extends AbstractElement
 
     public function toDOMElement(\DOMDocument $doc)
     {
+        $el = $this->createElement($doc);
+        
+        foreach ($this->patientIds->get() as $ii) {
+            $id = $doc->createElement(CDA::NS_CDA.'id');
+            $ii->setValueToElement($id, $doc);
+            $el->appendChild($id);
+        }
+        
+        $el->appendChild($this->getPatient()->toDOMElement($doc));
+        
+        return $el;
     }
 }

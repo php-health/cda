@@ -26,110 +26,16 @@
 
 namespace PHPHealth\CDA\RIM\Entity;
 
-use PHPHealth\CDA\ElementInterface;
-use PHPHealth\CDA\ClinicalDocument as CDA;
-use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
-use PHPHealth\CDA\DataType\Collection\Set;
-use PHPHealth\CDA\Elements\AdministrativeGenderCode;
-use PHPHealth\CDA\DataType\Code\CodedValue;
-use PHPHealth\CDA\Elements\BirthTime;
-
 /**
  *
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Patient implements ElementInterface
+class Patient extends Person
 {
-    /**
-     *
-     * @var Set|\PHPHealth\CDA\DataType\Name\PersonName[]
-     */
-    protected $names;
     
-    /**
-     *
-     * @var TimeStamp
-     */
-    protected $birthtime;
-    
-    /**
-     *
-     * @var CodedValue
-     */
-    protected $administrativeGenderCode;
-    
-    public function __construct(
-        Set $names = null,
-        TimeStamp $birthtime = null,
-        CodedValue $administrativeGenderCode = null
-    ) {
-        if ($names !== null) {
-            $this->setNames($names);
-        }
-        if ($birthtime !== null) {
-            $this->setBirthtime($birthtime);
-        }
-        if ($administrativeGenderCode !== null) {
-            $this->setAdministrativeGenderCode($administrativeGenderCode);
-        }
-    }
-    
-    public function getNames()
+    protected function getTagName()
     {
-        return $this->names;
-    }
-
-    public function getBirthtime()
-    {
-        return $this->birthtime;
-    }
-
-    public function setNames(Set $names)
-    {
-        $this->names = $names;
-        
-        return $this;
-    }
-
-    public function setBirthtime(TimeStamp $birthtime)
-    {
-        $this->birthtime = $birthtime;
-        
-        return $this;
-    }
-
-    public function getAdministrativeGenderCode()
-    {
-        return $this->administrativeGenderCode;
-    }
-
-    public function setAdministrativeGenderCode(CodedValue $administrativeGenderCode)
-    {
-        $this->administrativeGenderCode = $administrativeGenderCode;
-        
-        return $this;
-    }
-
-        
-    public function toDOMElement(\DOMDocument $doc)
-    {
-        $el = $doc->createElement(CDA::NS_CDA.'patient');
-        //add names
-        if ($this->getNames() !== null) {
-            $this->getNames()->setValueToElement($el, $doc);
-        }
-        // add administrative gender code
-        if ($this->getAdministrativeGenderCode() !== null) {
-            $adm = new AdministrativeGenderCode($this->administrativeGenderCode);
-            $el->appendChild($adm->toDOMElement($doc));
-        }
-        // add birthtime
-        if ($this->getBirthtime() !== null) {
-            $bir = new BirthTime($this->birthtime);
-            $el->appendChild($bir->toDOMElement($doc));
-        }
-        
-        return $el;
+        return 'patient';
     }
 }
