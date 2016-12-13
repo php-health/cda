@@ -61,12 +61,12 @@ class ConceptDescriptor extends \PHPHealth\CDA\DataType\AnyType
      */
     private $code;
     
-    function getCode()
+    public function getCode()
     {
         return $this->code;
     }
 
-    function setCode($code)
+    public function setCode($code)
     {
         $this->code = $code;
         
