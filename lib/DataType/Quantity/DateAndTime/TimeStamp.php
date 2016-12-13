@@ -123,7 +123,7 @@ class TimeStamp extends AbstractQuantity
     }
 
     
-    public function setValueToElement(\DOMElement &$el) 
+    public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null) 
     {
         $value = \mb_substr(
             $this->getDate()->format(self::DATE_FORMAT),

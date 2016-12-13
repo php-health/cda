@@ -145,7 +145,7 @@ class EncapsuledData extends BinaryData
         return $this;
     }
 
-    public function setValueToElement(\DOMElement &$el)
+    public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null)
     {
         $el->setAttribute(CD::NS_CDA.'mediaType', $this->getMediaType());
     

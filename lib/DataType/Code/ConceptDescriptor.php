@@ -137,7 +137,7 @@ class ConceptDescriptor extends \PHPHealth\CDA\DataType\AnyType
         return $this;
     }
 
-    public function setValueToElement(\DOMElement &$el)
+    public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null)
     {
         $el->setAttribute(CDA::NS_CDA."code", $this->getCode());
         

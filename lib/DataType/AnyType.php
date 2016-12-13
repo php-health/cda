@@ -41,5 +41,5 @@ abstract class AnyType
     * to the Element. 
     *
     */ 
-    abstract public function setValueToElement(\DOMElement &$el);
+    abstract public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null);
 }

@@ -111,7 +111,7 @@ class InstanceIdentifier extends AnyType
         return $this->getAssigningAuthorityName() !== null;
     }
 
-    public function setValueToElement(\DOMElement &$el)
+    public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null)
     {
         $el->setAttribute(CDA::NS_CDA."root", $this->getRoot());
         
