@@ -49,10 +49,10 @@ class RecordTargetTest extends \PHPUnit\Framework\TestCase
         
         
         $expected = <<<'CDA'
-<recordTarget>
-    <patientRole>
+<recordTarget typeCode="RCT">
+    <patientRole classCode="PAT">
         <id extension="12345" root="2.16.840.1.113883.19.5"/>
-        <patient>
+        <patient classCode="PSN">
             <name>
                 <given>Henry</given>
                 <family>Levin</family>

@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2016 julien.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,56 +22,83 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 namespace PHPHealth\CDA\RIM\Participation;
 
-use PHPHealth\CDA\RIM\Role\PatientRole;
+use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
+use PHPHealth\CDA\RIM\Role\AssignedAuthor;
+use PHPHealth\CDA\Elements\Time;
 
 /**
+ * 
  *
- *
- * @author Julien Fastré <julien.fastre@champs-libres.coop>
+ * @author julien.fastre@champs-libres.coop
  */
-class RecordTarget extends Participation
+class Author extends Participation
 {
     /**
      *
-     * @var PatientRole
+     * @var TimeStamp
      */
-    protected $patientRole;
+    private $time;
     
-    public function __construct(PatientRole $patientRole)
-    {
-        $this->setPatientRole($patientRole);
+    /**
+     *
+     * @var AssignedAuthor[]
+     */
+    private $assignedAuthors = array();
+    
+    public function __construct(
+        TimeStamp $time,
+        $assignedAuthors
+    ) {
+        $this->setTime($time);
+        $this->setAssignedAuthors($assignedAuthors);
     }
     
-    public function getPatientRole()
+    public function getTime(): TimeStamp
     {
-        return $this->patientRole;
+        return $this->time;
     }
 
-    public function setPatientRole(PatientRole $patientRole)
+    public function getAssignedAuthors(): array
     {
-        $this->patientRole = $patientRole;
+        return $this->assignedAuthors;
+    }
+
+    public function setTime(TimeStamp $time)
+    {
+        $this->time = $time;
+        
         return $this;
     }
 
-        
-    protected function getElementTag()
+    public function setAssignedAuthors($assignedAuthors)
     {
-        return 'recordTarget';
+        $this->assignedAuthors = is_array($assignedAuthors) ? $assignedAuthors 
+            : array($assignedAuthors);
+        
+        return $this;
+    }
+
+    protected function getElementTag(): string
+    {
+        return 'author';
     }
     
     public function getTypeCode()
     {
-        return 'RCT';
+        return 'AUT';
     }
 
-    public function toDOMElement(\DOMDocument $doc)
+    public function toDOMElement(\DOMDocument $doc): \DOMElement
     {
         $el = $this->createElement($doc);
         
-        $el->appendChild($this->patientRole->toDOMElement($doc));
+        $el->appendChild((new Time($this->time))->toDOMElement($doc));
+        
+        foreach ($this->assignedAuthors as $assignedAuthor) {
+            $el->appendChild($assignedAuthor->toDOMElement($doc));
+        }
         
         return $el;
     }

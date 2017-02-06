@@ -36,6 +36,8 @@ use PHPHealth\CDA\Elements\Id;
 use PHPHealth\CDA\Elements\ConfidentialityCode;
 use PHPHealth\CDA\Elements\TypeId;
 use PHPHealth\CDA\RIM\Participation\RecordTarget;
+use PHPHealth\CDA\RIM\Participation\Author;
+use PHPHealth\CDA\RIM\Participation\Custodian;
 
 /**
  * Root class for clinical document
@@ -102,6 +104,18 @@ class ClinicalDocument
      * @var ConfidentialityCode
      */
     private $confidentialityCode;
+    
+    /**
+     *
+     * @var Custodian
+     */
+    private $custodian;
+    
+    /**
+     *
+     * @var Author
+     */
+    private $author;
     
     public function __construct()
     {
@@ -242,7 +256,46 @@ class ClinicalDocument
         
         return $this;
     }
+    
+    public function getAuthor(): Author
+    {
+        return $this->author;
+    }
+    
+    public function hasAuthor()
+    {
+        return $this->author !== null;
+    }
 
+    public function setAuthor(Author $author)
+    {
+        $this->author = $author;
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return Custodian
+     */
+    public function getCustodian()
+    {
+        return $this->custodian;
+    }
+
+    /**
+     * 
+     * @param Custodian $custodian
+     * @return $this
+     */
+    public function setCustodian(Custodian $custodian)
+    {
+        $this->custodian = $custodian;
+        return $this;
+    }
+
+        
+
+    
         
     /**
      *
@@ -289,6 +342,15 @@ class ClinicalDocument
         // add recordTarget
         if ($this->getRecordTarget() !== null) {
             $doc->appendChild($this->recordTarget->toDOMElement($dom));
+        }
+        
+        // add author
+        if ($this->hasAuthor()) {
+            $doc->appendChild($this->getAuthor()->toDOMElement($dom));
+        }
+        
+        if ($this->getCustodian()) {
+            $doc->appendChild($this->getCustodian()->toDOMElement($dom));
         }
 
         // add components

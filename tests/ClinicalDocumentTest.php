@@ -45,6 +45,13 @@ use PHPHealth\CDA\RIM\Role\PatientRole;
 use PHPHealth\CDA\DataType\Collection\Set;
 use PHPHealth\CDA\RIM\Entity\Patient;
 use PHPHealth\CDA\RIM\Participation\RecordTarget;
+use PHPHealth\CDA\RIM\Participation\Author;
+use PHPHealth\CDA\RIM\Role\AssignedAuthor;
+use PHPHealth\CDA\RIM\Entity\AssignedPerson;
+use PHPHealth\CDA\RIM\Entity\RepresentedCustodianOrganization;
+use PHPHealth\CDA\RIM\Role\AssignedCustodian;
+use PHPHealth\CDA\RIM\Participation\Custodian;
+use PHPHealth\CDA\DataType\Name\EntityName;
 
 /**
  * 
@@ -112,6 +119,11 @@ CDA;
         $doc->setCode(new Code(LoincCode::create('42349-1', 'REASON FOR REFERRAL')));
         $doc->setConfidentialityCode(new ConfidentialityCode(ConfidentialityCodeType::create(ConfidentialityCodeType::RESTRICTED_KEY, ConfidentialityCodeType::RESTRICTED)));
         $doc->setRecordTarget($this->getRecordTarget());
+        $doc->setAuthor(new Author(
+            new TimeStamp(\DateTime::createFromFormat('Y-m-d-H:i', "2000-04-07-14:00")), 
+            $this->getAssignedAuthor()
+            ));
+        $doc->setCustodian($this->getCustodian());
         
         $nonXMLBody = new NonXMLBodyComponent();
         $nonXMLBody->setContent(new CharacterString("This is a narrative text"));
@@ -132,10 +144,10 @@ CDA;
     <title>Good Health Clinic Consultation Note</title>
     <effectiveTime value="201408270143"/>
     <confidentialityCode code="R" displayName="Restricted" codeSystem="2.16.840.1.113883.5.25" codeSystemName="Confidentiality"/>
-    <recordTarget>
-        <patientRole>
+    <recordTarget typeCode="RCT">
+        <patientRole classCode="PAT">
             <id extension="12345" root="2.16.840.1.113883.19.5"/>
-            <patient>
+            <patient classCode="PSN">
                 <name>
                     <given>Henry</given>
                     <family>Levin</family>
@@ -146,6 +158,27 @@ CDA;
             </patient>
         </patientRole>  
     </recordTarget>
+    <author typeCode="AUT">
+        <time value="2000040714"/>
+        <assignedAuthor classCode="ASSIGNED">
+            <id extension="KP00017" root="2.16.840.1.113883.19.5"/>
+            <assignedPerson classCode="PSN">
+                <name>
+                    <given>Robert</given>
+                    <family>Dolin</family>
+                    <suffix>MD</suffix>
+                </name>
+            </assignedPerson>
+        </assignedAuthor>
+    </author>
+    <custodian typeCode="CST">
+ 	    <assignedCustodian classCode="ASSIGNED">
+ 	      <representedCustodianOrganization classCode="ORG">
+	        <id root="82112744-ea24-11e6-95be-17f96f76d55c"/>
+ 	        <name>ABRUMET asbl</name>
+ 	      </representedCustodianOrganization>
+ 	    </assignedCustodian>
+ 	</custodian>
     <component>
         <nonXMLBody>
             <text mediaType="text/plain"><![CDATA[
@@ -204,5 +237,45 @@ CDA;
                 );
         
         return $patient;
+    }
+    
+        /**
+     * 
+     * @return AssignedAuthor
+     */
+    protected function getAssignedAuthor()
+    {
+        $names = new Set(PersonName::class);
+        $names->add((new PersonName())
+            ->addPart(PersonName::FIRST_NAME, 'Robert')
+            ->addPart(PersonName::LAST_NAME, 'Dolin')
+            ->addPart('suffix', 'MD')
+            );
+        
+        $assignedAuthor = new AssignedAuthor(
+            new AssignedPerson($names),
+            (new Set(InstanceIdentifier::class))
+                ->add(new InstanceIdentifier("2.16.840.1.113883.19.5", "KP00017"))
+            );
+        
+        return $assignedAuthor;
+    }
+    
+    /**
+     * 
+     * @return Custodian
+     */
+    protected function getCustodian()
+    {
+        $names = (new Set(EntityName::class))
+            ->add(new EntityName('ABRUMET asbl'));
+        $ids = (new Set(InstanceIdentifier::class))
+            ->add(new InstanceIdentifier('82112744-ea24-11e6-95be-17f96f76d55c'));
+        
+        $reprCustodian = new RepresentedCustodianOrganization($names, $ids);
+        
+        $assignedCustodian = new AssignedCustodian($reprCustodian);
+        
+        return new Custodian($assignedCustodian);
     }
 }

@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2016 julien.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,21 +22,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+namespace PHPHealth\CDA\RIM\Entity;
 
-namespace PHPHealth\CDA\DataType\Code;
+use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
+use PHPHealth\CDA\DataType\Code\CodedValue;
 
 /**
- * Coded data in its simplest form, where only the code is not predetermined.
- * The code system and code system version are fixed by the context in which
- * the CS value occurs. CS is used for coded attributes that have a single
- * HL7-defined value set.
+ * 
  *
- * @author Julien Fastré <julien.fastre@champs-libres.coop>
+ * @author julien
  */
-class CodedSimple extends CodedValue
-{
-    public function __construct($code)
+abstract class LivingSubject extends Entity
+{ 
+    /**
+     *
+     * @var TimeStamp
+     */
+    protected $birthtime;
+    
+    /**
+     *
+     * @var CodedValue
+     */
+    protected $administrativeGenderCode;
+
+    public function getBirthtime()
     {
-        parent::__construct($code, null, null, null);
+        return $this->birthtime;
+    }
+
+    public function setBirthtime(TimeStamp $birthtime)
+    {
+        $this->birthtime = $birthtime;
+        
+        return $this;
+    }
+
+    public function getAdministrativeGenderCode()
+    {
+        return $this->administrativeGenderCode;
+    }
+
+    public function setAdministrativeGenderCode(CodedValue $administrativeGenderCode)
+    {
+        $this->administrativeGenderCode = $administrativeGenderCode;
+        
+        return $this;
     }
 }

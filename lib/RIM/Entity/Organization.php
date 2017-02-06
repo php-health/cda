@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2016 julien.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,21 +22,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+namespace PHPHealth\CDA\RIM\Entity;
 
-namespace PHPHealth\CDA\DataType\Code;
+use PHPHealth\CDA\Elements\Id;
+use PHPHealth\CDA\DataType\Collection\Set;
+use PHPHealth\CDA\DataType\Code\CodedSimple;
 
 /**
- * Coded data in its simplest form, where only the code is not predetermined.
- * The code system and code system version are fixed by the context in which
- * the CS value occurs. CS is used for coded attributes that have a single
- * HL7-defined value set.
+ * 
  *
- * @author Julien Fastré <julien.fastre@champs-libres.coop>
+ * @author julien
  */
-class CodedSimple extends CodedValue
+abstract class Organization extends Entity
 {
-    public function __construct($code)
+    /**
+     *
+     * @var CodedSimple
+     */
+    protected $classCode = 'ORG';
+    
+    public function __construct(Set $names, Set $ids)
     {
-        parent::__construct($code, null, null, null);
+        $this->setNames($names);
+        $this->setId($ids);
+    }
+
+    public function getDefaultClassCode()
+    {
+        return $this->classCode;
+    }
+
+    public function toDOMElement(\DOMDocument $doc): \DOMElement
+    {
+        $el = $this->createElement($doc);
+        
+        foreach ($this->getId() as $idValue) {
+            $idElement = new Id($idValue);
+            $el->appendChild($idElement->toDomElement($doc));
+        }
+        
+        foreach ($this->getNames()->get() as $name) {
+            /* @var $name \PHPHealth\CDA\DataType\Name\EntityName */
+            $name->setValueToElement($el, $doc);
+        }
+        
+        return $el;
     }
 }

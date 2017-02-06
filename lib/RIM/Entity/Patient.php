@@ -33,8 +33,7 @@ namespace PHPHealth\CDA\RIM\Entity;
  */
 class Patient extends Person
 {
-    
-    protected function getTagName()
+        protected function getElementTag(): string
     {
         return 'patient';
     }

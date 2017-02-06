@@ -39,26 +39,8 @@ use PHPHealth\CDA\Elements\BirthTime;
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-abstract class Person implements ElementInterface
+abstract class Person extends LivingSubject
 {
-    /**
-     *
-     * @var Set|\PHPHealth\CDA\DataType\Name\PersonName[]
-     */
-    protected $names;
-    
-    /**
-     *
-     * @var TimeStamp
-     */
-    protected $birthtime;
-    
-    /**
-     *
-     * @var CodedValue
-     */
-    protected $administrativeGenderCode;
-    
     public function __construct(
         Set $names = null,
         TimeStamp $birthtime = null,
@@ -75,48 +57,15 @@ abstract class Person implements ElementInterface
         }
     }
     
-    public function getNames()
+    public function getDefaultClassCode()
     {
-        return $this->names;
+        return 'PSN';
     }
 
-    public function getBirthtime()
-    {
-        return $this->birthtime;
-    }
-
-    public function setNames(Set $names)
-    {
-        $this->names = $names;
-        
-        return $this;
-    }
-
-    public function setBirthtime(TimeStamp $birthtime)
-    {
-        $this->birthtime = $birthtime;
-        
-        return $this;
-    }
-
-    public function getAdministrativeGenderCode()
-    {
-        return $this->administrativeGenderCode;
-    }
-
-    public function setAdministrativeGenderCode(CodedValue $administrativeGenderCode)
-    {
-        $this->administrativeGenderCode = $administrativeGenderCode;
-        
-        return $this;
-    }
-    
-    abstract protected function getTagName();
-
-        
+            
     public function toDOMElement(\DOMDocument $doc)
     {
-        $el = $doc->createElement(CDA::NS_CDA.$this->getTagName());
+        $el = parent::createElement($doc);
         //add names
         if ($this->getNames() !== null) {
             $this->getNames()->setValueToElement($el, $doc);

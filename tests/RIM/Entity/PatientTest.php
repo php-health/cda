@@ -55,7 +55,7 @@ class PatientTest extends TestCase
                 );
         
         $expected = <<<'CDA'
-<patient>
+<patient classCode="PSN">
     <name>
         <given>Henry</given>
         <family>Levin</family>

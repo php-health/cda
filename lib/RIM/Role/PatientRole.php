@@ -37,7 +37,7 @@ use PHPHealth\CDA\ClinicalDocument as CDA;
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class PatientRole extends AbstractElement
+class PatientRole extends Role
 {
     /**
      *
@@ -106,6 +106,11 @@ class PatientRole extends AbstractElement
     protected function getElementTag()
     {
         return 'patientRole';
+    }
+    
+    public function getClassCode()
+    {
+        return 'PAT';
     }
 
     public function toDOMElement(\DOMDocument $doc)

@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,21 +22,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+namespace PHPHealth\CDA\RIM\Role;
 
-namespace PHPHealth\CDA\DataType\Code;
+use PHPHealth\CDA\Elements\AbstractElement;
 
 /**
- * Coded data in its simplest form, where only the code is not predetermined.
- * The code system and code system version are fixed by the context in which
- * the CS value occurs. CS is used for coded attributes that have a single
- * HL7-defined value set.
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class CodedSimple extends CodedValue
+abstract class Role extends AbstractElement 
+    implements \PHPHealth\CDA\HasClassCode
 {
-    public function __construct($code)
+    
+    
+    /**
+     * 
+     * @param \DOMDocument $doc
+     * @param string[] $properties the name of the properties to apply on element
+     * @return \DOMElement
+     */
+    /*protected function createElement(\DOMDocument $doc, array $properties = array())
     {
-        parent::__construct($code, null, null, null);
-    }
+        $el = parent::createElement($doc, $properties);
+        
+        if (! empty($this->getClassCode())) {
+            $el->setAttribute(CDA::NS_CDA.'classCode', $this->getClassCode());
+        }
+        
+        return $el;
+    }*/
 }

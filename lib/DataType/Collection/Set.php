@@ -44,7 +44,7 @@ use PHPHealth\CDA\DataType\AnyType;
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Set extends AnyType
+class Set extends AnyType implements \IteratorAggregate
 {
     /**
      * The contained elements
@@ -82,6 +82,35 @@ class Set extends AnyType
     }
     
     /**
+     * check that the Set contains element, or throws an \InvalidArgumentException
+     * 
+     * Example usage :
+     * 
+     * ```
+     * public function setIds(Set $ids)
+     * {
+     *      $ids->checkContainsOrThrow(InstanceIdentifier::class);
+     *      $this->ids = $ids;
+     * 
+     *      return $this;
+     * }
+     * ```
+     * 
+     * @param string $name
+     * @return boolean
+     * @throws \InvalidArgumentException
+     */
+    public function checkContainsOrThrow($name)
+    {
+        if  ($name !== $this->getElementName()) {
+            throw new \InvalidArgumentException(sprintf("The Set should countains %s"
+                . " but contains %s", $name, $this->getElementName()));
+        } else {
+            return true;
+        }
+    }
+    
+    /**
      * @return mixed[]
      */
     public function get()
@@ -110,6 +139,13 @@ class Set extends AnyType
                 AnyType::class,
                 \PHPHealth\CDA\ElementInterface::class
             ));
+        }
+    }
+
+    public function getIterator(): \Traversable
+    {
+        foreach ($this->get() as $el) {
+            yield $el;
         }
     }
 }

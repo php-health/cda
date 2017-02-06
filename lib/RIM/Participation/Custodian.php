@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,56 +22,65 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 namespace PHPHealth\CDA\RIM\Participation;
 
-use PHPHealth\CDA\RIM\Role\PatientRole;
+use PHPHealth\CDA\RIM\Role\AssignedCustodian;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class RecordTarget extends Participation
+class Custodian extends Participation
 {
     /**
      *
-     * @var PatientRole
+     * @var AssignedCustodian
      */
-    protected $patientRole;
+    protected $assignedCustodian;
     
-    public function __construct(PatientRole $patientRole)
+    public function __construct(AssignedCustodian $assignedCustodian)
     {
-        $this->setPatientRole($patientRole);
+        $this->setAssignedCustodian($assignedCustodian);
     }
     
-    public function getPatientRole()
+    /**
+     * 
+     * @return AssignedCustodian
+     */
+    public function getAssignedCustodian(): AssignedCustodian
     {
-        return $this->patientRole;
+        return $this->assignedCustodian;
     }
 
-    public function setPatientRole(PatientRole $patientRole)
+    /**
+     * 
+     * @param AssignedCustodian $assignedCustodian
+     * @return $this
+     */
+    public function setAssignedCustodian(AssignedCustodian $assignedCustodian)
     {
-        $this->patientRole = $patientRole;
+        $this->assignedCustodian = $assignedCustodian;
+        
         return $this;
     }
 
         
-    protected function getElementTag()
+    protected function getElementTag(): string
     {
-        return 'recordTarget';
+        return 'custodian';
     }
     
     public function getTypeCode()
     {
-        return 'RCT';
+        return 'CST';
     }
 
-    public function toDOMElement(\DOMDocument $doc)
+    public function toDOMElement(\DOMDocument $doc): \DOMElement
     {
         $el = $this->createElement($doc);
         
-        $el->appendChild($this->patientRole->toDOMElement($doc));
+        $el->appendChild($this->getAssignedCustodian()->toDOMElement($doc));
         
         return $el;
     }
