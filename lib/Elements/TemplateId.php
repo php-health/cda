@@ -2,7 +2,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 julien.fastre@champs-libres.coop
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,46 +22,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-namespace PHPHealth\CDA\DataType\Code;
+namespace PHPHealth\CDA\Elements;
 
-use PHPHealth\CDA\DataType\Code\CodedValue;
+use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
+use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
- * Template for Loinc Code
+ * 
  *
- * @author julien
+ * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class LoincCode extends CodedValue
+class TemplateId extends AbstractElement
 {
-    const CODE_SYSTEM = '2.16.840.1.113883.6.1';
-    const CODE_SYSTEM_NAME = 'LOINC';
-    
-    public function __construct(
-        $code, 
-        $displayName
-    ) {
-        parent::__construct(
-            $code, 
-            $displayName, 
-            self::CODE_SYSTEM, 
-            self::CODE_SYSTEM_NAME
-            );
-    }
-    
     /**
-     * 
-     * @param type $code
-     * @param type $displayName
-     * @return CodedValue
-     * @deprecated since 2017-01-01 use the constructor instead
+     *
+     * @var InstanceIdentifier
      */
-    public static function create($code, $displayName)
+    protected $root;
+    
+    public function __construct(InstanceIdentifier $code)
     {
-        return new CodedValue(
-            $code,
-            $displayName,
-            self::CODE_SYSTEM,
-            self::CODE_SYSTEM_NAME
-        );
+        $this->root = $code;
+    }
+
+        public function getId(): InstanceIdentifier
+    {
+        return $this->root;
+    }
+
+    public function setId(InstanceIdentifier $code)
+    {
+        $this->root = $code;
+        return $this;
+    }
+
+            
+    protected function getElementTag(): string
+    {
+        return 'templateId';
+    }
+
+    public function toDOMElement(\DOMDocument $doc): \DOMElement
+    {
+        $el = $this->createElement($doc);
+        $this->getId()->setValueToElement($el, $doc);
+        
+        return $el;
     }
 }

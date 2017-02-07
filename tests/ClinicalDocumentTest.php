@@ -205,6 +205,109 @@ CDA;
                 "test the document is equal to expected");
     }
     
+    public function testDocumentWithXMLStructuredBody()
+    {
+        // create the initial document
+        $doc = new ClinicalDocument();
+        $doc->setTitle(new Title(new CharacterString("Good Health Clinic Consultation Note")));
+        $doc->setEffectiveTime(new EffectiveTime(
+                new TimeStamp(\DateTime::createFromFormat(\DateTime::ISO8601, 
+                        "2014-08-27T01:43:12+0200"))));
+        $doc->setId(new Id(new InstanceIdentifier("1.2.3.4", "https://mass.chill.pro")));
+        $doc->setCode(new Code(LoincCode::create('42349-1', 'REASON FOR REFERRAL')));
+        $doc->setConfidentialityCode(new ConfidentialityCode(ConfidentialityCodeType::create(ConfidentialityCodeType::RESTRICTED_KEY, ConfidentialityCodeType::RESTRICTED)));
+        $doc->setRecordTarget($this->getRecordTarget());
+        $doc->setAuthor(new Author(
+            new TimeStamp(\DateTime::createFromFormat('Y-m-d-H:i', "2000-04-07-14:00")), 
+            $this->getAssignedAuthor()
+            ));
+        $doc->setCustodian($this->getCustodian());
+        
+        $body = Component\XMLBodyComponentTest::getBody();
+        $doc->getRootComponent()->addComponent($body);
+        
+        $clinicalElements = $doc->toDOMDocument()
+                ->getElementsByTagName('ClinicalDocument');
+        
+        $clinicalElement = $clinicalElements->item(0);
+        
+        // create the expected document from XML string
+        $expected = <<<'CDA'
+<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hl7-org:v3 CDA.xsd">
+    <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+    <id root="1.2.3.4" extension="https://mass.chill.pro" />
+    <code code='42349-1' displayName='REASON FOR REFERRAL' codeSystem='2.16.840.1.113883.6.1' codeSystemName='LOINC'/>	
+    <title>Good Health Clinic Consultation Note</title>
+    <effectiveTime value="201408270143"/>
+    <confidentialityCode code="R" displayName="Restricted" codeSystem="2.16.840.1.113883.5.25" codeSystemName="Confidentiality"/>
+    <recordTarget typeCode="RCT">
+        <patientRole classCode="PAT">
+            <id extension="12345" root="2.16.840.1.113883.19.5"/>
+            <patient classCode="PSN">
+                <name>
+                    <given>Henry</given>
+                    <family>Levin</family>
+                    <suffix>the 7th</suffix>
+                </name>
+                <administrativeGenderCode code="M" codeSystem="2.16.840.1.113883.5.1"/>
+                <birthTime value="19320924"/>
+            </patient>
+        </patientRole>  
+    </recordTarget>
+    <author typeCode="AUT">
+        <time value="2000040714"/>
+        <assignedAuthor classCode="ASSIGNED">
+            <id extension="KP00017" root="2.16.840.1.113883.19.5"/>
+            <assignedPerson classCode="PSN">
+                <name>
+                    <given>Robert</given>
+                    <family>Dolin</family>
+                    <suffix>MD</suffix>
+                </name>
+            </assignedPerson>
+        </assignedAuthor>
+    </author>
+    <custodian typeCode="CST">
+ 	    <assignedCustodian classCode="ASSIGNED">
+ 	      <representedCustodianOrganization classCode="ORG">
+	        <id root="82112744-ea24-11e6-95be-17f96f76d55c"/>
+ 	        <name>ABRUMET asbl</name>
+ 	      </representedCustodianOrganization>
+ 	    </assignedCustodian>
+ 	</custodian>
+    <component>
+    <structuredBody classCode="DOCBODY">
+      <component typeCode="COMP">
+        <section classCode="DOCSECT">
+          <templateId root="1.3.6.1.4.1.19376.1.5.3.1.3.1"/>
+          <id root="430ADCD7-4481-DC0F-181D-2398F930B220"/>
+          <code code="42349-1" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="REASON FOR REFERRAL"/>
+          <title>Reason for referral</title>
+          <text>Robert Hunter is a patient.</text>
+        </section>
+      </component>
+    </structuredBody>
+    </component>
+</ClinicalDocument>
+CDA;
+        $expectedDoc = new \DOMDocument('1.0');
+        $expectedDoc->loadXML($expected);
+        $expectedClinicalElement = $expectedDoc
+                ->getElementsByTagName('ClinicalDocument')
+                ->item(0);
+        
+        // save the doc for a further reading
+        $doc->toDOMDocument()->save(sys_get_temp_dir().'/'.__METHOD__.'.xml');
+            ;
+        // tests
+        $this->assertEquals(1, $clinicalElements->length, 
+                "test that there is only one clinical document");
+        $this->assertEqualXMLStructure(
+                $expectedClinicalElement, $clinicalElement, true,
+                "test the document is equal to expected");
+    }
+    
     
     
     

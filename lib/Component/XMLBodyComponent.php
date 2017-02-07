@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,54 +22,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+namespace PHPHealth\CDA\Component;
 
-namespace PHPHealth\CDA\Elements;
+use PHPHealth\CDA\HasClassCode;
 
-use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
-use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Text extends AbstractElement
+class XMLBodyComponent extends AbstractComponent implements HasClassCode
 {
     /**
      *
-     * @var CharacterString
+     * @var AbstractComponent[]
      */
-    private $content;
+    private $components = array();
     
-    public function __construct(CharacterString $content)
+    public function getComponents(): array
     {
-        $this->setContent($content);
+        return $this->components;
     }
 
-    
-    public function getContent()
+    public function setComponents(array $components)
     {
-        return $this->content;
-    }
-
-    public function setContent(CharacterString $content)
-    {
-        $this->content = $content;
+        $this->components = $components;
         
         return $this;
     }
-
-        
-    public function toDOMElement(\DOMDocument $doc): \DOMElement
+    
+    public function addComponent(SingleComponent $component)
     {
-        $el = $this->createElement($doc);
-        $el->appendChild($doc->createTextNode($this->getContent()->getContent()));
+        $this->components[] = $component;
         
-        return $el;
+        return $this;
+    }
+    
+    public function getClassCode(): string
+    {
+        return 'DOCBODY';
     }
 
-    protected function getElementTag(): string
+            
+    public function toDOMElement(\DOMDocument $doc): \DOMElement
     {
-        return 'text';
+        $structuredBody = $doc->createElement(CDA::NS_CDA.'structuredBody');
+        $structuredBody->setAttribute(CDA::NS_CDA.'classCode',
+            $this->getClassCode());
+        
+        
+        foreach ($this->getComponents() as $component) {
+            $structuredBody->appendChild($component->toDOMElement($doc));
+        }
+        
+        return $structuredBody;
     }
 }
