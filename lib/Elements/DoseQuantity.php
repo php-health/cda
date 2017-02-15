@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,75 +22,68 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 namespace PHPHealth\CDA\Elements;
 
-use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
-use PHPHealth\CDA\DataType\Collection\Interval\PeriodicIntervalOfTime;
-use PHPHealth\CDA\ClinicalDocument as CDA;
+use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\DataType\Collection\Interval\AbstractInterval;
+use PHPHealth\CDA\DataType\Quantity\PhysicalQuantity\PhysicalQuantity;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class EffectiveTime extends AbstractElement
+class DoseQuantity extends AbstractElement
 {
     /**
      *
-     * @var TimeStamp|PeriodicIntervalOfTime
+     * @var AbstractInterval|PhysicalQuantity
      */
-    protected $value;
+    protected $quantity;
+    
+    public function __construct($quantity)
+    {
+        $this->setQuantity($quantity);
+    }
     
     /**
-     *
-     * @var string
+     * 
+     * @return AbstractInterval|PhysicalQuantity
      */
-    protected $operator = '';
-    
-    public function __construct($value)
+    function getQuantity()
     {
-        $this->setValue($value);
-    }
-    
-    
-    public function getValue()
-    {
-        return $this->value;
+        return $this->quantity;
     }
 
-    public function setValue($value)
+    function setQuantity($quantity)
     {
-        if ($value instanceof PeriodicIntervalOfTime ||
-            $value instanceof TimeStamp) {
-            $this->value = $value;
-        } else {
-            throw new \UnexpectedValueException(sprintf("The timestamp must "
-                . "implements %s or %s", PeriodicIntervalOfTime::class, 
-                TimeStamp::class));
+        if (!
+            ( 
+            $quantity instanceof PhysicalQuantity 
+            || 
+            $quantity instanceof AbstractInterval
+            )
+            ) {
+            throw new \UnexpectedValueException(sprintf("The value of quantity"
+                . " should be an instance of %s or %s", PhysicalQuantity::class,
+                AbstractInterval::class));
         }
+        
+        $this->quantity = $quantity;
         
         return $this;
     }
-    
-    public function setOperatorAppend()
+
+        
+    protected function getElementTag(): string
     {
-        $this->operator = 'A';
+        return 'doseQuantity';
     }
 
-    public function toDOMElement(\DOMDocument $doc)
+    public function toDOMElement(\DOMDocument $doc): \DOMElement
     {
-        $el = $this->createElement($doc, ['value']);
-        
-        if ($this->operator === 'A') {
-            $el->setAttribute(CDA::NS_CDA.'operator', 'A');
-        }
+        $el = $this->createElement($doc, ['quantity']);
         
         return $el;
-    }
-
-    protected function getElementTag()
-    {
-        return 'effectiveTime';
     }
 }

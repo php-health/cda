@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,75 +22,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+namespace PHPHealth\CDA\DataType\Boolean;
 
-namespace PHPHealth\CDA\Elements;
-
-use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
-use PHPHealth\CDA\DataType\Collection\Interval\PeriodicIntervalOfTime;
-use PHPHealth\CDA\ClinicalDocument as CDA;
+use PHPHealth\CDA\DataType\AnyType;
 
 /**
- *
+ * Boolean element
+ * 
+ * As the boolean element may be applyed with different tags, 
+ * the tag on wich the element apply may be set by the Element which will
+ * use the data
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class EffectiveTime extends AbstractElement
+class Boolean extends AnyType
 {
-    /**
-     *
-     * @var TimeStamp|PeriodicIntervalOfTime
-     */
     protected $value;
     
-    /**
-     *
-     * @var string
-     */
-    protected $operator = '';
+    protected $tag;
     
-    public function __construct($value)
+    public function __construct($value, $tag = null)
     {
-        $this->setValue($value);
+        $this->value = $value;
+        $this->tag = $tag;
     }
-    
-    
+
     public function getValue()
     {
         return $this->value;
     }
 
+    public function getTag()
+    {
+        return $this->tag;
+    }
+
     public function setValue($value)
     {
-        if ($value instanceof PeriodicIntervalOfTime ||
-            $value instanceof TimeStamp) {
-            $this->value = $value;
-        } else {
-            throw new \UnexpectedValueException(sprintf("The timestamp must "
-                . "implements %s or %s", PeriodicIntervalOfTime::class, 
-                TimeStamp::class));
-        }
+        $this->value = $value;
+        return $this;
+    }
+
+    public function setTag($tag)
+    {
+        $this->tag = $tag;
         
         return $this;
     }
-    
-    public function setOperatorAppend()
-    {
-        $this->operator = 'A';
-    }
 
-    public function toDOMElement(\DOMDocument $doc)
-    {
-        $el = $this->createElement($doc, ['value']);
         
-        if ($this->operator === 'A') {
-            $el->setAttribute(CDA::NS_CDA.'operator', 'A');
-        }
-        
-        return $el;
-    }
-
-    protected function getElementTag()
+    public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null)
     {
-        return 'effectiveTime';
+        assert ($this->getTag() === null, new \RuntimeException("The tag "
+            . "on boolean must be defined"));
+        
+        $el->setAttributeNS(CD::NS_CDA, $this->getTag(), $value);
     }
 }

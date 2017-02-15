@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,75 +22,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+namespace PHPHealth\CDA\DataType\Quantity\PhysicalQuantity;
 
-namespace PHPHealth\CDA\Elements;
-
-use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
-use PHPHealth\CDA\DataType\Collection\Interval\PeriodicIntervalOfTime;
+use PHPHealth\CDA\DataType\Quantity\AbstractQuantity;
 use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
- *
+ * A dimensioned quantity expressing the result of measuring. 
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class EffectiveTime extends AbstractElement
+class PhysicalQuantity extends AbstractQuantity
 {
-    /**
-     *
-     * @var TimeStamp|PeriodicIntervalOfTime
-     */
+    protected $ucumUnit;
+    
     protected $value;
     
-    /**
-     *
-     * @var string
-     */
-    protected $operator = '';
-    
-    public function __construct($value)
+    public function __construct($ucumUnit, $value)
     {
+        $this->setUcumUnit($ucumUnit);
         $this->setValue($value);
     }
+
     
-    
+    public function getUcumUnit()
+    {
+        return $this->ucumUnit;
+    }
+
     public function getValue()
     {
         return $this->value;
     }
 
-    public function setValue($value)
+    public function setUcumUnit($ucumUnit)
     {
-        if ($value instanceof PeriodicIntervalOfTime ||
-            $value instanceof TimeStamp) {
-            $this->value = $value;
-        } else {
-            throw new \UnexpectedValueException(sprintf("The timestamp must "
-                . "implements %s or %s", PeriodicIntervalOfTime::class, 
-                TimeStamp::class));
-        }
-        
+        $this->ucumUnit = $ucumUnit;
         return $this;
     }
-    
-    public function setOperatorAppend()
+
+    public function setValue($value)
     {
-        $this->operator = 'A';
+        $this->value = $value;
+        return $this;
     }
 
-    public function toDOMElement(\DOMDocument $doc)
-    {
-        $el = $this->createElement($doc, ['value']);
         
-        if ($this->operator === 'A') {
-            $el->setAttribute(CDA::NS_CDA.'operator', 'A');
+    public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null)
+    {
+        if ($this->getValue() !== NULL) {
+            $el->setAttributeNS(CDA::NS_CDA, 'value', $this->getValue());
         }
         
-        return $el;
-    }
-
-    protected function getElementTag()
-    {
-        return 'effectiveTime';
+        if ($this->getUcumUnit() !== NULL) {
+            $el->setAttributeNS(CDA::NS_CDA, 'unit', $this->getUcumUnit());
+        }
     }
 }

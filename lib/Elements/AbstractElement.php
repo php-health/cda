@@ -29,6 +29,7 @@ namespace PHPHealth\CDA\Elements;
 use PHPHealth\CDA\ClinicalDocument as CDA;
 use PHPHealth\CDA\HasClassCode;
 use PHPHealth\CDA\HasTypeCode;
+use PHPHealth\CDA\HasMoodCodeInterface;
 
 /**
  *
@@ -69,9 +70,13 @@ abstract class AbstractElement implements \PHPHealth\CDA\ElementInterface
             }
         }
         
+        if ($this instanceof HasMoodCodeInterface) {
+            $el->setAttribute(CDA::NS_CDA.'moodCode', $this->getMoodCode());
+        }
+        
         if (count($properties) > 0) {
             foreach ($properties as $property) {
-                $this->{$property}->setValueToElement($el);
+                $this->{$property}->setValueToElement($el, $doc);
             }
         }
         
