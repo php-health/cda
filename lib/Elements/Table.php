@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,58 +22,84 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 namespace PHPHealth\CDA\Elements;
 
-use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
 use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\DataType\TextAndMultimedia\NarrativeString;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Text extends AbstractElement
+class Table extends AbstractElement
 {
     /**
      *
-     * @var CharacterString
+     * @var TableHead
      */
-    private $content;
+    private $thead;
     
-    public function __construct(CharacterString $content)
+    /**
+     *
+     * @var TableBody
+     */
+    private $tbody;
+    
+    /**
+     *
+     * @var NarrativeString
+     */
+    private $narrative;
+    
+    function __construct(NarrativeString $narrative)
     {
-        $this->setContent($content);
+        $this->tbody = new TableBody($this);
+        $this->thead = new TableHead($this);
+        $this->narrative = $narrative;
+    }
+    
+    function getNarrative(): NarrativeString
+    {
+        return $this->narrative;
     }
 
     /**
      * 
-     * @return CharacterString
+     * @return \PHPHealth\CDA\Elements\TableHead
      */
-    public function getContent()
+    function getThead(): TableHead
     {
-        return $this->content;
+        return $this->thead;
     }
 
-    public function setContent(CharacterString $content)
+    /**
+     * 
+     * @return \PHPHealth\CDA\Elements\TableBody
+     */
+    function getTbody(): TableBody
     {
-        $this->content = $content;
-        
-        return $this;
+        return $this->tbody;
+    }  
+    
+    protected function getElementTag(): string
+    {
+        return 'table';
     }
 
-        
     public function toDOMElement(\DOMDocument $doc): \DOMElement
     {
         $el = $this->createElement($doc);
         
-        $this->getContent()->setValueToElement($el, $doc);
+        if (! $this->getThead()->isEmpty()) {
+            $el->appendChild($this->getThead()->toDOMElement($doc));
+        }
+        
+        if (! $this->getTbody()->isEmpty()) {
+            $el->appendChild($this->getTbody()->toDOMElement($doc));
+        }
         
         return $el;
-    }
-
-    protected function getElementTag(): string
-    {
-        return 'text';
+        
     }
 }

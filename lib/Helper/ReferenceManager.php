@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,58 +22,63 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+namespace PHPHealth\CDA\Helper;
 
-namespace PHPHealth\CDA\Elements;
-
-use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
-use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\Elements\ReferenceElement;
+use PHPHealth\CDA\Elements\ReferenceType;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Text extends AbstractElement
+class ReferenceManager
 {
     /**
      *
-     * @var CharacterString
+     * @var ReferenceType[]
      */
-    private $content;
+    private $typeReferences = array();
     
-    public function __construct(CharacterString $content)
+    /**
+     *
+     * @var ReferenceElement[] 
+     */
+    private $elementReferences = array();
+    
+    public function createReference($name = null)
     {
-        $this->setContent($content);
+        $ref = $name === null ? \uniqid() : $name;
+        
+        $this->typeReferences[$ref] = new ReferenceType($ref);
+        $this->elementReferences[$ref] = new ReferenceElement($ref);
     }
-
+    
     /**
      * 
-     * @return CharacterString
+     * @param type $ref
+     * @return ReferenceType
      */
-    public function getContent()
+    public function getReferenceType($ref)
     {
-        return $this->content;
+        if (! array_key_exists($ref, $this->typeReferences)) {
+            $this->createReference($ref);
+        }
+        
+        return $this->typeReferences[$ref];
     }
-
-    public function setContent(CharacterString $content)
+    
+        /**
+     * 
+     * @param type $ref
+     * @return ReferenceElement
+     */
+    public function getReferenceElement($ref)
     {
-        $this->content = $content;
+        if (! array_key_exists($ref, $this->elementReferences)) {
+            $this->createReference($ref);
+        }
         
-        return $this;
-    }
-
-        
-    public function toDOMElement(\DOMDocument $doc): \DOMElement
-    {
-        $el = $this->createElement($doc);
-        
-        $this->getContent()->setValueToElement($el, $doc);
-        
-        return $el;
-    }
-
-    protected function getElementTag(): string
-    {
-        return 'text';
+        return $this->elementReferences[$ref];
     }
 }

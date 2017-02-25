@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,58 +22,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 namespace PHPHealth\CDA\Elements;
 
 use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
-use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Text extends AbstractElement
+class ReferenceElement extends CharacterString
 {
     /**
      *
-     * @var CharacterString
+     * @var string
      */
-    private $content;
+    private $reference;
     
-    public function __construct(CharacterString $content)
+    public function __construct($reference)
     {
-        $this->setContent($content);
+        $this->reference = $reference;
     }
-
-    /**
-     * 
-     * @return CharacterString
-     */
-    public function getContent()
+    
+    function getReference()
     {
-        return $this->content;
+        return $this->reference;
     }
-
-    public function setContent(CharacterString $content)
-    {
-        $this->content = $content;
         
-        return $this;
+    protected function getElementTag()
+    {
+        return 'reference';
     }
 
-        
     public function toDOMElement(\DOMDocument $doc): \DOMElement
     {
-        $el = $this->createElement($doc);
+        $el = $doc->createElement(CDA::NS_CDA.'reference');
         
-        $this->getContent()->setValueToElement($el, $doc);
+        $el->setAttribute(CDA::NS_CDA.'value', '#'.$this->getReference());
         
         return $el;
     }
-
-    protected function getElementTag(): string
+    
+    public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null)
     {
-        return 'text';
+        $el->appendChild($this->toDOMElement($doc));
     }
 }

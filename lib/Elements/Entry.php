@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,58 +22,76 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 namespace PHPHealth\CDA\Elements;
 
-use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
 use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\RIM\Act\Act;
+use PHPHealth\CDA\HasTypeCode;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Text extends AbstractElement
+class Entry extends AbstractElement implements HasTypeCode
 {
     /**
      *
-     * @var CharacterString
+     * @var Act[]
      */
-    private $content;
+    protected $acts = array();
     
-    public function __construct(CharacterString $content)
+    function getActs()
     {
-        $this->setContent($content);
+        return $this->acts;
     }
 
-    /**
-     * 
-     * @return CharacterString
-     */
-    public function getContent()
+    function setActs(array $acts)
     {
-        return $this->content;
-    }
-
-    public function setContent(CharacterString $content)
-    {
-        $this->content = $content;
+        $validate = \array_reduce($acts, 
+            function ($previous, $item) {
+                if ($previous === false) {
+                    return false;
+                }
+                
+                return $item instanceof Act;
+            });
+        
+        if ($validate === false) {
+            throw new \UnexpectedValueException(sprintf("The contents of acts "
+                . "should implements %s", Act::class));
+        }
+        
+        $this->acts = $acts;
         
         return $this;
     }
 
+    public function addAct(Act $act) 
+    {
+        $this->acts[] = $act;
+    }
+    
+    
+    public function getTypeCode(): string
+    {
+        return 'COMP';
+    }
         
+    protected function getElementTag(): string
+    {
+        return 'entry';
+    }
+
     public function toDOMElement(\DOMDocument $doc): \DOMElement
     {
         $el = $this->createElement($doc);
         
-        $this->getContent()->setValueToElement($el, $doc);
+        foreach ($this->getActs() as $act) {
+            $el->appendChild($act->toDOMElement($doc));
+        }
         
         return $el;
     }
 
-    protected function getElementTag(): string
-    {
-        return 'text';
-    }
 }

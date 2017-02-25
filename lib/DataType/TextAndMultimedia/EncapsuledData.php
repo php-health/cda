@@ -147,7 +147,9 @@ class EncapsuledData extends BinaryData
 
     public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null)
     {
-        $el->setAttribute(CD::NS_CDA.'mediaType', $this->getMediaType());
+        if ($this->getMediaType() !== 'text/plain') {
+            $el->setAttribute(CD::NS_CDA.'mediaType', $this->getMediaType());
+        }
     
         if ($this->getMediaType() == 'text/plain') {
             $content = new \DOMCdataSection($this->getContent());

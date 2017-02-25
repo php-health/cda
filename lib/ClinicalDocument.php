@@ -38,6 +38,8 @@ use PHPHealth\CDA\Elements\TypeId;
 use PHPHealth\CDA\RIM\Participation\RecordTarget;
 use PHPHealth\CDA\RIM\Participation\Author;
 use PHPHealth\CDA\RIM\Participation\Custodian;
+use PHPHealth\CDA\DataType\Code\CodedSimple;
+use PHPHealth\CDA\Helper\ReferenceManager;
 
 /**
  * Root class for clinical document
@@ -47,6 +49,13 @@ use PHPHealth\CDA\RIM\Participation\Custodian;
 class ClinicalDocument
 {
     const NS_CDA = '';
+    
+    /**
+     * Reference manager assigned to this document
+     *
+     * @var ReferenceManager
+     */
+    private $referenceManager;
     
     /**
      * the templateId of the document. Will be inserted into doc, like
@@ -60,6 +69,18 @@ class ClinicalDocument
      * @var TypeId
      */
     private $typeId;
+    
+    /**
+     *
+     * @var InstanceIdentifier[]
+     */
+    private $templateId = array();
+    
+    /**
+     *
+     * @var CodedSimple
+     */
+    private $languageCode;
     
     /**
      * the title of the document
@@ -120,12 +141,22 @@ class ClinicalDocument
     public function __construct()
     {
         $this->rootComponent = new Component\RootBodyComponent();
+        $this->referenceManager = new ReferenceManager();
         
         $typeIdIdentifier = new InstanceIdentifier(
             "2.16.840.1.113883.1.3",
             "POCD_HD000040"
         );
         $this->typeId = new TypeId($typeIdIdentifier);
+    }
+    
+    /**
+     * 
+     * @return ReferenceManager
+     */
+    function getReferenceManager(): ReferenceManager
+    {
+        return $this->referenceManager;
     }
     
     /**
@@ -149,6 +180,46 @@ class ClinicalDocument
         return $this;
     }
     
+    function getTemplateId(): array
+    {
+        return $this->templateId;
+    }
+
+    function setTemplateId(array $templateId)
+    {
+        $validate = \array_reduce($templateId, function($carry, $item) {
+            if ($carry === false) {
+                return false;
+            }
+            
+            return $item instanceof InstanceIdentifier;
+        });
+        
+        assert($validate, new \UnexpectedValueException());
+        
+        $this->templateId = $templateId;
+        
+        return $this;
+    }
+    
+    function addTtemplateId(InstanceIdentifier $identifier)
+    {
+        $this->templateId[] = $identifier;
+    }
+
+    function getLanguageCode()
+    {
+        return $this->languageCode;
+    }
+
+    function setLanguageCode(CodedSimple $languageCode)
+    {
+        $this->languageCode = $languageCode;
+        
+        return $this;
+    }
+
+            
     /**
      *
      * @return EffectiveTime
@@ -301,9 +372,9 @@ class ClinicalDocument
      *
      * @return \DOMDocument
      */
-    public function toDOMDocument()
+    public function toDOMDocument(\DOMDocument $dom = null)
     {
-        $dom = new \DOMDocument('1.0', 'UTF-8');
+        $dom = $dom === null ? new \DOMDocument('1.0', 'UTF-8') : $dom;
         
         $doc = $dom->createElementNS('urn:hl7-org:v3', 'ClinicalDocument');
         $dom->appendChild($doc);
@@ -315,6 +386,13 @@ class ClinicalDocument
         );
         // add typeId
         $doc->appendChild($this->typeId->toDOMElement($dom));
+        
+        // add templateIds
+        foreach ($this->getTemplateId() as $templateId) {
+            $doc->appendChild((new Elements\TemplateId($templateId))
+                ->toDOMElement($dom));
+        }
+        
         // add id
         if ($this->getId() !== null) {
             $doc->appendChild($this->getId()->toDOMElement($dom));
@@ -337,6 +415,13 @@ class ClinicalDocument
         // add confidentialityCode
         if ($this->getConfidentialityCode() !== null) {
             $doc->appendChild($this->confidentialityCode->toDOMElement($dom));
+        }
+        
+        // add language code
+        if ($this->getLanguageCode() !== null) {
+            $doc->appendChild(
+                (new Elements\LanguageCode($this->getLanguageCode()))
+                ->toDOMElement($dom));
         }
         
         // add recordTarget

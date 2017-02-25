@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,58 +22,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+namespace PHPHealth\CDA\DataType\Code;
 
-namespace PHPHealth\CDA\Elements;
+use PHPHealth\CDA\ClinicalDocument as CDA;
 
-use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
-use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\DataType\Code\CodedSimple;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Text extends AbstractElement
+class NullCode extends CodedSimple
 {
-    /**
-     *
-     * @var CharacterString
-     */
-    private $content;
+    protected $flavor;
     
-    public function __construct(CharacterString $content)
+    public function __construct($flavor)
     {
-        $this->setContent($content);
+        $this->flavor = $flavor;
+    }
+    
+    public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null)
+    {
+        $el->setAttribute(CDA::NS_CDA.'nullFlavor', $this->flavor);
     }
 
-    /**
-     * 
-     * @return CharacterString
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    public function setContent(CharacterString $content)
-    {
-        $this->content = $content;
-        
-        return $this;
-    }
-
-        
-    public function toDOMElement(\DOMDocument $doc): \DOMElement
-    {
-        $el = $this->createElement($doc);
-        
-        $this->getContent()->setValueToElement($el, $doc);
-        
-        return $el;
-    }
-
-    protected function getElementTag(): string
-    {
-        return 'text';
-    }
 }

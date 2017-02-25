@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,58 +22,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 namespace PHPHealth\CDA\Elements;
 
-use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
-use PHPHealth\CDA\Elements\AbstractElement;
+use PHPHealth\CDA\DataType\Code\CodedSimple;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Text extends AbstractElement
+class LanguageCode extends AbstractElement
 {
     /**
      *
-     * @var CharacterString
+     * @var CodedSimple
      */
-    private $content;
+    protected $code;
     
-    public function __construct(CharacterString $content)
+    function __construct(CodedSimple $code)
     {
-        $this->setContent($content);
+        $this->setCode($code);
     }
 
-    /**
-     * 
-     * @return CharacterString
-     */
-    public function getContent()
+    
+    function getCode()
     {
-        return $this->content;
+        return $this->code;
     }
 
-    public function setContent(CharacterString $content)
+    function setCode(CodedSimple $code)
     {
-        $this->content = $content;
-        
+        $this->code = $code;
         return $this;
     }
 
         
-    public function toDOMElement(\DOMDocument $doc): \DOMElement
-    {
-        $el = $this->createElement($doc);
-        
-        $this->getContent()->setValueToElement($el, $doc);
-        
-        return $el;
-    }
-
     protected function getElementTag(): string
     {
-        return 'text';
+        return 'languageCode';
+    }
+
+    public function toDOMElement(\DOMDocument $doc): \DOMElement
+    {
+        return $this->createElement($doc, ['code']);
     }
 }

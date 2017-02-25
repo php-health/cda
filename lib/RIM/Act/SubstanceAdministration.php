@@ -34,6 +34,8 @@ use PHPHealth\CDA\Elements\EffectiveTime;
 use PHPHealth\CDA\Elements\RouteCode;
 use PHPHealth\CDA\RIM\Participation\Consumable;
 use PHPHealth\CDA\Elements\DoseQuantity;
+use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
+use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
 
 /**
  * 
@@ -71,8 +73,6 @@ class SubstanceAdministration extends Act
      * @var Consumable 
      */
     private $consumable;
-    
-    private $frequencyOfAdministration;
     
     
     public function getClassCode(): string
@@ -119,16 +119,6 @@ class SubstanceAdministration extends Act
     public function getRateQuantity()
     {
         return $this->rateQuantity;
-    }
-    
-    public function getTimeOfAdministration()
-    {
-        return parent::getEffectiveTime();
-    }
-    
-    public function getFrequencyOfAdministration()
-    {
-        return $this->frequencyOfAdministration;
     }
     
     /**
@@ -184,17 +174,7 @@ class SubstanceAdministration extends Act
         return $this;
     }
     
-    public function setTimeOfAdministration($time)
-    {
-        return parent::setEffectiveTime($effectiveTime);
-    }
     
-    public function setFrequencyOfAdministration($frequency)
-    {
-        $this->frequencyOfAdministration = $frequency;
-        
-        return $this;
-    }
 
     /**
      * 
@@ -217,23 +197,37 @@ class SubstanceAdministration extends Act
             }
         }
         
+        if ($this->getIds() !== null) {
+            foreach ($this->getIds()->getIterator() as $id) {
+                /* @var $id InstanceIdentifier */
+                $el->appendChild((new \PHPHealth\CDA\Elements\Id($id))
+                    ->toDOMElement($doc));
+            }
+        }
+        
         if ($this->getText() !== null) {
             $el->appendChild((new Text($this->getText()))->toDOMElement($doc));
         }
         
-        if ($this->getTimeOfAdministration() !== null) {
-            $el->appendChild((new EffectiveTime($this->getTimeOfAdministration()))
-                ->toDOMElement($doc));
+        if ($this->getStatusCode() !== null) {
+            $el->appendChild(
+                (new \PHPHealth\CDA\Elements\StatusCode($this->getStatusCode()))
+                    ->toDOMElement($doc)
+                );
         }
         
-        if ($this->getFrequencyOfAdministration() !== null) {
-            $effectiveTime = new EffectiveTime($this->getFrequencyOfAdministration());
+        $first = true;
+        foreach ($this->getEffectiveTime() as $time) {
+            $effectiveTime = new EffectiveTime($time);
             
-            if ($this->getTimeOfAdministration() !== null) {
+            if (! $first) {
                 $effectiveTime->setOperatorAppend();
             }
             
-            $el->appendChild($effectiveTime->toDOMElement($doc));
+            $el->appendChild($effectiveTime
+                ->toDOMElement($doc));
+            
+            $first = false;
         }
         
         if ($this->getRouteCode() !== null) {

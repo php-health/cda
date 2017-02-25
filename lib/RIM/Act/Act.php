@@ -33,6 +33,8 @@ use PHPHealth\CDA\DataType\Boolean\Boolean;
 use PHPHealth\CDA\DataType\TextAndMultimedia\EncapsuledData;
 use PHPHealth\CDA\DataType\Code\StatusCode;
 use PHPHealth\CDA\DataType\Identifier\InstanceIdentifier;
+use PHPHealth\CDA\Elements\Code;
+use PHPHealth\CDA\DataType\Code\CodedValue;
 
 /**
  * A record of something that is being done, has been done, can be done, 
@@ -51,7 +53,7 @@ class Act extends AbstractElement implements HasClassCode, HasMoodCodeInterface
     
     /**
      *
-     * @var type 
+     * @var CodedValue
      */
     protected $code;
     
@@ -73,7 +75,7 @@ class Act extends AbstractElement implements HasClassCode, HasMoodCodeInterface
      */
     protected $statusCode;
     
-    protected $effectiveTime;
+    protected $effectiveTime = array();
     
     /**
      *
@@ -84,12 +86,12 @@ class Act extends AbstractElement implements HasClassCode, HasMoodCodeInterface
     protected $moodCode = 'EVN';
     
     
-    public function getIds(): Set
+    public function getIds()
     {
         return $this->ids;
     }
 
-    public function getCode(): type
+    public function getCode()
     {
         return $this->code;
     }
@@ -99,12 +101,12 @@ class Act extends AbstractElement implements HasClassCode, HasMoodCodeInterface
         return $this->negationInd;
     }
 
-    public function getText(): EncapsuledData
+    public function getText()
     {
         return $this->text;
     }
 
-    public function getStatusCode(): StatusCode
+    public function getStatusCode()
     {
         return $this->statusCode;
     }
@@ -126,9 +128,10 @@ class Act extends AbstractElement implements HasClassCode, HasMoodCodeInterface
         return $this;
     }
 
-    public function setCode(type $code)
+    public function setCode(CodedValue $code)
     {
         $this->code = $code;
+        
         return $this;
     }
 
@@ -150,9 +153,14 @@ class Act extends AbstractElement implements HasClassCode, HasMoodCodeInterface
         return $this;
     }
 
-    public function setEffectiveTime($effectiveTime)
+    public function setEffectiveTime($effectiveTime, $append = true)
     {
-        $this->effectiveTime = $effectiveTime;
+        if ($append) {
+            $this->effectiveTime[] = $effectiveTime;
+        } else {
+            $this->effectiveTime = array($effectiveTime);
+        }
+        
         return $this;
     }
 
@@ -207,7 +215,23 @@ class Act extends AbstractElement implements HasClassCode, HasMoodCodeInterface
 
     public function toDOMElement(\DOMDocument $doc): \DOMElement
     {
+        $el = $this->createElement($doc);
         
+        if ($this->getTemplateIds() !== null) {
+            foreach ($this->templateIds as $id) {
+                $el->appendChild((new TemplateId($id))->toDOMElement($doc));
+            }
+        }
+        
+        if ($this->getText() !== null) {
+            $el->appendChild((new Text($this->getText()))->toDOMElement($doc));
+        }
+        
+        if ($this->getCode() !== null) {
+            $el->appendChild((new Code($this->getCode()))->toDOMElement($doc));
+        }
+        
+        return $el;
     }
 
 }

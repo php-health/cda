@@ -72,13 +72,12 @@ XML;
         
         $expectedDoc = new \DOMDocument('1.0');
         $expectedDoc->loadXML($expected); 
-        $expectedBody = $expectedDoc
-                ->getElementsByTagName('structuredBody')
-                ->item(0);
         
+        $fake = new \DOMDocument;
+        $fake->appendChild($body->toDOMElement($fake));
         
-        $this->assertEqualXMLStructure($expectedBody, 
-            $body->toDOMElement(new \DOMDocument()), true);
+        $this->assertEqualXMLStructure($expectedDoc->firstChild, 
+            $fake->firstChild, true);
     }
     
     /**
@@ -91,32 +90,17 @@ XML;
      */
     public static function getBody()
     {
-        $section = new FooSection();
+        $section = (new Section())
+            ->setCode(new LoincCode("42349-1", "REASON FOR REFERRAL"))
+            ->setId(new InstanceIdentifier('430ADCD7-4481-DC0F-181D-2398F930B220'))
+            ->setText(new CharacterString('Robert Hunter is a patient.'))
+            ->addTemplateId(new InstanceIdentifier('1.3.6.1.4.1.19376.1.5.3.1.3.1'))
+            ->setTitle(new CharacterString('Reason for referral'))
+            ;
         $component = (new SingleComponent())
             ->addSection($section);
         
         return (new XMLBodyComponent())
             ->addComponent($component);
-    }
-}
-
-class FooSection extends Section 
-{
-    public function __construct()
-    {
-        $this->setCode(new LoincCode("42349-1", "REASON FOR REFERRAL"));
-        $this->setId(new InstanceIdentifier('430ADCD7-4481-DC0F-181D-2398F930B220'));
-        $this->setText(new CharacterString('Robert Hunter is a patient.'));
-    }
-
-
-    public function getTemplateId(): InstanceIdentifier
-    {
-        return new InstanceIdentifier('1.3.6.1.4.1.19376.1.5.3.1.3.1');
-    }
-
-    public function getTitle()
-    {
-        return new CharacterString('Reason for referral');
     }
 }

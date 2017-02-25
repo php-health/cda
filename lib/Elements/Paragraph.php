@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,58 +22,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 namespace PHPHealth\CDA\Elements;
 
-use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
 use PHPHealth\CDA\Elements\AbstractElement;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Text extends AbstractElement
+class Paragraph extends AbstractElement
 {
-    /**
-     *
-     * @var CharacterString
-     */
-    private $content;
+    protected $content = '';
     
-    public function __construct(CharacterString $content)
+    public function __construct($content)
     {
         $this->setContent($content);
     }
-
-    /**
-     * 
-     * @return CharacterString
-     */
-    public function getContent()
+    
+    function getContent()
     {
         return $this->content;
     }
 
-    public function setContent(CharacterString $content)
+    function setContent($content)
     {
         $this->content = $content;
-        
         return $this;
     }
 
-        
+    
+    protected function getElementTag(): string
+    {
+        return 'paragraph';
+    }
+
     public function toDOMElement(\DOMDocument $doc): \DOMElement
     {
         $el = $this->createElement($doc);
         
-        $this->getContent()->setValueToElement($el, $doc);
+        $el->appendChild($doc->createTextNode($this->getContent()));
         
         return $el;
-    }
-
-    protected function getElementTag(): string
-    {
-        return 'text';
     }
 }

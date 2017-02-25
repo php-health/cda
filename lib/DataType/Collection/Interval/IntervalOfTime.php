@@ -1,9 +1,8 @@
 <?php
-
 /*
  * The MIT License
  *
- * Copyright 2016 Julien Fastré <julien.fastre@champs-libres.coop>.
+ * Copyright 2017 Julien Fastré <julien.fastre@champs-libres.coop>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,58 +22,71 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+namespace PHPHealth\CDA\DataType\Collection\Interval;
 
-namespace PHPHealth\CDA\Elements;
+use PHPHealth\CDA\ClinicalDocument as CDA;
+use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
 
-use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
-use PHPHealth\CDA\Elements\AbstractElement;
 
 /**
- *
+ * 
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-class Text extends AbstractElement
+class IntervalOfTime extends AbstractInterval
 {
     /**
      *
-     * @var CharacterString
+     * @var TimeStamp
      */
-    private $content;
+    private $low;
     
-    public function __construct(CharacterString $content)
-    {
-        $this->setContent($content);
-    }
-
     /**
-     * 
-     * @return CharacterString
+     *
+     * @var TimeStamp
      */
-    public function getContent()
+    private $high;
+    
+    function __construct(TimeStamp $low, TimeStamp $high)
     {
-        return $this->content;
+        $this->setHigh($high);
+        $this->setLow($low);
     }
 
-    public function setContent(CharacterString $content)
+    
+    function getLow(): TimeStamp
     {
-        $this->content = $content;
-        
+        return $this->low;
+    }
+
+    function getHigh(): TimeStamp
+    {
+        return $this->high;
+    }
+
+    function setLow(TimeStamp $low)
+    {
+        $this->low = $low;
+        return $this;
+    }
+
+    function setHigh(TimeStamp $high)
+    {
+        $this->high = $high;
         return $this;
     }
 
         
-    public function toDOMElement(\DOMDocument $doc): \DOMElement
+    public function setValueToElement(\DOMElement &$el, \DOMDocument $doc = null)
     {
-        $el = $this->createElement($doc);
+        $low = $doc->createElement(CDA::NS_CDA.'low');
+        $this->low->setValueToElement($low, $doc);
         
-        $this->getContent()->setValueToElement($el, $doc);
+        $high = $doc->createElement(CDA::NS_CDA.'high');
+        $this->high->setValueToElement($high, $doc);
         
-        return $el;
-    }
-
-    protected function getElementTag(): string
-    {
-        return 'text';
+        $el->appendChild($low);
+        $el->appendChild($high);
+        $el->setAttribute('xsi:type', 'IVL_TS');
     }
 }

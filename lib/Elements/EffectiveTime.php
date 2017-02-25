@@ -28,6 +28,7 @@ namespace PHPHealth\CDA\Elements;
 
 use PHPHealth\CDA\DataType\Quantity\DateAndTime\TimeStamp;
 use PHPHealth\CDA\DataType\Collection\Interval\PeriodicIntervalOfTime;
+use PHPHealth\CDA\DataType\Collection\Interval\IntervalOfTime;
 use PHPHealth\CDA\ClinicalDocument as CDA;
 
 /**
@@ -62,13 +63,17 @@ class EffectiveTime extends AbstractElement
 
     public function setValue($value)
     {
-        if ($value instanceof PeriodicIntervalOfTime ||
-            $value instanceof TimeStamp) {
+        if ($value instanceof PeriodicIntervalOfTime 
+            ||
+            $value instanceof TimeStamp
+            ||
+            $value instanceof IntervalOfTime
+            ) {
             $this->value = $value;
         } else {
             throw new \UnexpectedValueException(sprintf("The timestamp must "
-                . "implements %s or %s", PeriodicIntervalOfTime::class, 
-                TimeStamp::class));
+                . "implements %s, %s or %s", PeriodicIntervalOfTime::class, 
+                TimeStamp::class, IntervalOfTime::class));
         }
         
         return $this;

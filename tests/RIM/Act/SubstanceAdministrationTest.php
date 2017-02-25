@@ -76,7 +76,7 @@ XML
                 new InstanceIdentifier('1.3.6.1.4.1.19376.1.5.3.1.4.7')
             ))
             ->setText(new CharacterString("Theodur 200mg BID"))
-            ->setFrequencyOfAdministration(
+            ->setEffectiveTime(
                 (new PeriodicIntervalOfTime(new \DateInterval('PT12H')))
                     ->setInstitutionSpecified(true)
                 )
@@ -194,21 +194,6 @@ XML
           </manufacturerOrganization>
         </manufacturedProduct>
       </consumable>
-      <entryRelationship typeCode="COMP">
-        <substanceAdministration classCode="SBADM" moodCode="EVN">
-          <templateId root="2.16.840.1.113883.10.20.22.4.147"/>
-          <code code="76662-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Medication Instructions"/>
-          <text>
-            <!-- Reference into the section.text to a tag that ONLY contains free text SIG -->
-            <reference value="#MedicationSig_6"/>
-          </text>
-          <consumable>
-            <manufacturedProduct>
-              <manufacturedLabeledDrug nullFlavor="NA"/>
-            </manufacturedProduct>
-          </consumable>
-        </substanceAdministration>
-      </entryRelationship>
     </substanceAdministration>
   </entry>
 </section>

@@ -34,6 +34,7 @@ use PHPHealth\CDA\DataType\Code\CodedWithEquivalents;
 use PHPHealth\CDA\Elements\Code;
 use PHPHealth\CDA\DataType\TextAndMultimedia\CharacterString;
 use PHPHealth\CDA\Elements\Text;
+use PHPHealth\CDA\Elements\Entry;
 
 /**
  * 
@@ -41,7 +42,7 @@ use PHPHealth\CDA\Elements\Text;
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
-abstract class Section extends AbstractElement implements HasClassCode
+class Section extends AbstractElement implements HasClassCode
 {
     /**
      *
@@ -60,6 +61,24 @@ abstract class Section extends AbstractElement implements HasClassCode
      * @var CharacterString
      */
     private $text;
+    
+    /**
+     *
+     * @var InstanceIdentifier[]
+     */
+    private $templateIds = array();
+    
+    /**
+     *
+     * @var CharacterString
+     */
+    private $title;
+    
+    /**
+     *
+     * @var Entry[]
+     */
+    private $entries = array();
     
     protected function getElementTag(): string
     {
@@ -108,21 +127,88 @@ abstract class Section extends AbstractElement implements HasClassCode
         $this->text = $text;
         return $this;
     }
+    
+    public function setTemplateIds(array $templateIds)
+    {
+        $validation = \array_reduce($templateIds, 
+            function ($carry, $item) {
+                if ($carry === false) {
+                    return false;
+                }
+                
+                return $item instanceof InstanceIdentifier;
+            });
         
+        if ($validation === false) {
+            throw new \UnexpectedValueException(sprintf("The values of templateIds"
+                . " must contains only %s", InstanceIdentifier::class));
+        }
+        
+        $this->templateIds = $templateIds;
+        
+        return $this;
+    }
+    
+    public function addTemplateId(InstanceIdentifier $templateId)
+    {
+        $this->templateIds[] = $templateId;
+        
+        return $this;
+    }
+
+            
     /**
      * the code for the current section
      * 
-     * @return InstanceIdentifier
+     * @return InstanceIdentifier[]
      */
-    abstract public function getTemplateId();
+    public function getTemplateIds()
+    {
+        return $this->templateIds;
+    }
     
     /**
      * The title for the section
      * 
      * @return CharacterString
      */
-    abstract public function getTitle();
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    
+    public function setTitle(CharacterString $title)
+    {
+        $this->title = $title;
+        
+        return $this;
+    }
+    
+    /**
+     * create an entry, which is already bound to the current section
+     * 
+     * @return Entry
+     */
+    public function createEntry(): Entry
+    {
+        $entry = new Entry();
+        
+        $this->addEntry($entry);
+        
+        return $entry;
+    }
+    
+    function getEntries(): array
+    {
+        return $this->entries;
+    }
+    
+    public function addEntry(Entry $entry)
+    {
+        $this->entries[] = $entry;
+    }
 
+    
     /**
      * 
      * @param \DOMDocument $doc
@@ -131,10 +217,12 @@ abstract class Section extends AbstractElement implements HasClassCode
     {
         $el = $this->createElement($doc);
         // append templateId
-        if ($this->getTemplateId() !== NULL) {
-            $el->appendChild(
-                (new TemplateId($this->getTemplateId()))->toDOMElement($doc)
-                );
+        if ($this->getTemplateIds() !== NULL) {
+            foreach ($this->getTemplateIds() as $id) {
+                $el->appendChild(
+                    (new TemplateId($id))->toDOMElement($doc)
+                    );
+            }
         }
         // append id
         if ($this->getId() !== NULL) {
@@ -161,6 +249,9 @@ abstract class Section extends AbstractElement implements HasClassCode
                 );
         }
         
+        foreach ($this->getEntries() as $entry) {
+            $el->appendChild($entry->toDOMElement($doc));
+        }
         
         return $el;
     }
