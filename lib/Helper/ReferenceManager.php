@@ -28,7 +28,28 @@ use PHPHealth\CDA\Elements\ReferenceElement;
 use PHPHealth\CDA\Elements\ReferenceType;
 
 /**
+ * Manages references inside a document.
  * 
+ * Each `ClinicalDocument` has its own `ReferenceManager`, which help to manage references across documents.
+ * 
+ * `ReferenceType` may be added on some elements to create a reference :
+ * ```
+ * $doc = new ClinicalDocument();
+ * 
+ * $refManager = $doc->getReferenceManager();
+ * 
+ * // create an element 'element' which may have a reference
+ * 
+ * $element->setReference($refManager->getReferenceType('my_reference'));
+ * 
+ * // will create <element ID="my_reference">blabla</element>
+ * 
+ * // add the reference in a text
+ * 
+ * $text->setText($refManager->getReferenceElement('my_reference'));
+ * // will create <text><reference value="my_reference" /></text>
+ * 
+ * ```
  *
  * @author Julien Fastré <julien.fastre@champs-libres.coop>
  */
@@ -46,6 +67,12 @@ class ReferenceManager
      */
     private $elementReferences = array();
     
+    /**
+     * Will create a reference inside the manager.
+     * 
+     * 
+     * @param string $name will be replaced by an unique id if not set
+     */
     public function createReference($name = null)
     {
         $ref = $name === null ? \uniqid() : $name;
@@ -55,8 +82,11 @@ class ReferenceManager
     }
     
     /**
+     * Get the Reference type for the given $ref
      * 
-     * @param type $ref
+     * If $ref does not exist as reference, it will be created.
+     * 
+     * @param string $ref
      * @return ReferenceType
      */
     public function getReferenceType($ref)
@@ -68,9 +98,12 @@ class ReferenceManager
         return $this->typeReferences[$ref];
     }
     
-        /**
+    /**
+     * Get the ReferenceElement for the given $ref
      * 
-     * @param type $ref
+     * If $ref does not exists as reference, it will be created.
+     * 
+     * @param string $ref
      * @return ReferenceElement
      */
     public function getReferenceElement($ref)

@@ -8,6 +8,29 @@ Create HL7-CDA (tm) documents in PHP.
 
 Currently, see the usage in tests. The class [`ClinicalDocumentTest` is a good starting point](tests/ClinicalDocumentTest.php).
 
+### Manage references
+
+Each `ClinicalDocument` has its own `ReferenceManager`, which help to manage references across documents.
+
+`ReferenceType` may be added on some elements to create a reference :
+
+```
+$doc = new ClinicalDocument();
+
+$refManager = $doc->getReferenceManager();
+
+// create an element 'element' which may have a reference
+
+$element->setReference($refManager->getReferenceType('my_reference'));
+// will create <element ID="my_reference">blabla</element>
+
+// add the reference in a text
+
+$text->setText($refManager->getReferenceElement('my_reference'));
+// will create <text><reference value="my_reference" /></text>
+
+```
+
 ## Run tests
 
 1. Run composer to load phpunit and build autoload :
