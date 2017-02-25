@@ -109,7 +109,7 @@ class PeriodicIntervalOfTime extends AbstractInterval
             throw new \Exception("doc should not be null");
         }
         
-        $el->setAttribute('xsi:type', 'PIVL_TS');
+        $el->setAttributeNS(CDA::NS_XSI_URI, 'xsi:type', 'PIVL_TS');
         
         if ($this->getInstitutionSpecified() !== null) {
             $el->setAttribute(CDA::NS_CDA.'institutionSpecified', 

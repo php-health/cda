@@ -49,6 +49,9 @@ use PHPHealth\CDA\Helper\ReferenceManager;
 class ClinicalDocument
 {
     const NS_CDA = '';
+    const NS_CDA_URI = 'urn:hl7-org:v3';
+    const NS_XSI_URI = 'http://www.w3.org/2001/XMLSchema-instance';
+    
     
     /**
      * Reference manager assigned to this document
@@ -376,11 +379,11 @@ class ClinicalDocument
     {
         $dom = $dom === null ? new \DOMDocument('1.0', 'UTF-8') : $dom;
         
-        $doc = $dom->createElementNS('urn:hl7-org:v3', 'ClinicalDocument');
+        $doc = $dom->createElementNS(self::NS_CDA_URI, 'ClinicalDocument');
         $dom->appendChild($doc);
         // set the NS
         $doc->setAttributeNS(
-            'http://www.w3.org/2001/XMLSchema-instance',
+            self::NS_XSI_URI,
             'xsi:schemaLocation',
             'urn:hl7-org:v3 CDA.xsd'
         );

@@ -87,6 +87,6 @@ class IntervalOfTime extends AbstractInterval
         
         $el->appendChild($low);
         $el->appendChild($high);
-        $el->setAttribute('xsi:type', 'IVL_TS');
+        $el->setAttributeNS(CDA::NS_XSI_URI, 'xsi:type', 'IVL_TS');
     }
 }
