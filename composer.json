@@ -7,6 +7,10 @@
         {
             "name": "Julien Fastré",
             "email": "julien.fastre@champs-libres.coop"
+        },
+        {
+            "name": "Champs-Libres",
+            "email": "info@champs-libres.coop"
         }
     ],
     "autoload" : {
